@@ -28,5 +28,7 @@ build:
     - script:
         name: go test
         code: |
-          make unit
+          make lint
+          make vet
+          go test -v ./...
 

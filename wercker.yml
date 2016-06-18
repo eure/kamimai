@@ -9,9 +9,6 @@ build:
     # at the right place in the workspace tree
     - setup-go-workspace
 
-    # golint step!
-    - wercker/golint
-
     # goget
     - script:
         name: go get
@@ -19,16 +16,17 @@ build:
           cd $WERCKER_SOURCE_DIR
           go get -d ./...
           go get -d github.com/stretchr/testify
+          go get -u github.com/golang/lint/golint
 
-    # Build the project
+    # build the package
     - script:
         name: go build
         code: |
           go build ./...
 
-    # Test the project
+    # test the package
     - script:
         name: go test
         code: |
-          go test ./...
+          make unit
 

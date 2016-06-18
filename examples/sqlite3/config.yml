@@ -1,0 +1,4 @@
+---
+development:
+  driver: sqlite3
+  dsn: file:test.db?mode=memory

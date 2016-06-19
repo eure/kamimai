@@ -16,8 +16,8 @@ type (
 		// Close any open connection here.
 		Close() error
 
-		// Version returns the current migration version.
-		Version() (uint64, error)
+		// Version returns a version interface.
+		Version() Version
 	}
 )
 

@@ -9,9 +9,9 @@ import (
 type drv struct {
 }
 
-func (d *drv) Open(_ string) error      { return nil }
-func (d *drv) Close() error             { return nil }
-func (d *drv) Version() (uint64, error) { return 0, nil }
+func (d *drv) Open(_ string) error { return nil }
+func (d *drv) Close() error        { return nil }
+func (d *drv) Version() Version    { return nil }
 
 func TestRegisterDriver(t *testing.T) {
 	assert := assert.New(t)

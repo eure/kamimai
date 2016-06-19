@@ -2,6 +2,7 @@ package core
 
 import (
 	"io/ioutil"
+	"os"
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
@@ -99,7 +100,7 @@ func (c Config) Driver() string {
 // Dsn returns a raw dsn string.
 func (c Config) Dsn() string {
 	if d, ok := c.data[c.env]; ok {
-		return d.Dsn
+		return os.ExpandEnv(d.Dsn)
 	}
 	return ""
 }

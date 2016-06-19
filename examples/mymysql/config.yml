@@ -1,4 +1,0 @@
----
-test:
-  driver: mymysql
-  dsn: tcp:127.0.0.1:3306*kamimai/$DB_USER/$DB_PASSWD?charset=utf8&keepalive=1200

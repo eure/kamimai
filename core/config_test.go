@@ -1,6 +1,7 @@
 package core
 
 import (
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,6 +9,9 @@ import (
 
 func TestNewConfig(t *testing.T) {
 	assert := assert.New(t)
+	os.Clearenv()
+	os.Setenv("KAMIMAI_DB_USER", "kamimai")
+	os.Setenv("KAMIMAI_DB_PASSWD", "passwd")
 
 	var (
 		conf *Config
@@ -28,42 +32,35 @@ func TestNewConfig(t *testing.T) {
 	if assert.NoError(err) {
 		assert.Equal("mysql", conf.Driver())
 		assert.Equal("github.com/go-sql-driver/mysql", conf.Import())
-		assert.Equal("mysql://$DB_USER:$DB_PASSWD@127.0.0.1:3306/kamimai?charset=utf8&keepalive=1200", conf.Dsn())
+		assert.Equal("mysql://kamimai:passwd@127.0.0.1:3306/kamimai?charset=utf8", conf.Dsn())
 	}
 
 	var (
-		conf1 *Config
-		conf2 *Config
-		conf3 *Config
+		confMySQL  *Config
+		confSQLite *Config
 	)
 
-	conf1, err = NewConfig("../examples/mysql")
-	conf1.WithEnv("development")
+	confMySQL, err = NewConfig("../examples/mysql")
+	confMySQL.WithEnv("development")
 	if assert.NoError(err) {
-		assert.Equal("mysql", conf1.Driver())
+		assert.Equal("mysql", confMySQL.Driver())
 	}
 
-	conf2, err = NewConfig("../examples/mymysql")
-	conf2.WithEnv("development")
+	confSQLite, err = NewConfig("../examples/sqlite3")
+	confSQLite.WithEnv("development")
 	if assert.NoError(err) {
-		assert.Equal("mymysql", conf2.Driver())
+		assert.Equal("sqlite3", confSQLite.Driver())
 	}
 
-	conf3, err = NewConfig("../examples/sqlite3")
-	conf3.WithEnv("development")
-	if assert.NoError(err) {
-		assert.Equal("sqlite3", conf3.Driver())
-	}
-
-	conf = MergeConfig(conf1, conf2, conf3)
+	conf = MergeConfig(confMySQL, confSQLite)
 	conf.WithEnv("development")
 	if assert.NoError(err) {
 		assert.Equal("mysql", conf.Driver())
 	}
 
-	conf = MergeConfig(conf2, conf1, conf3)
+	conf = MergeConfig(confSQLite, confMySQL)
 	conf.WithEnv("development")
 	if assert.NoError(err) {
-		assert.Equal("mymysql", conf.Driver())
+		assert.Equal("sqlite3", conf.Driver())
 	}
 }

@@ -1,3 +1,3 @@
 [development]
 driver = "mysql"
-dsn = "mysql://$KAMIMAI_DB_USER:$KAMIMAI_DB_PASSWD@127.0.0.1:3306/kamimai?charset=utf8"
+dsn = "mysql://$MYSQL_USER:$MYSQL_PASSWORD@127.0.0.1:3306/kamimai?charset=utf8"

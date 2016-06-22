@@ -10,8 +10,8 @@ import (
 func TestNewConfig(t *testing.T) {
 	assert := assert.New(t)
 	os.Clearenv()
-	os.Setenv("KAMIMAI_DB_USER", "kamimai")
-	os.Setenv("KAMIMAI_DB_PASSWD", "passwd")
+	os.Setenv("MYSQL_USER", "testuser")
+	os.Setenv("MYSQL_PASSWORD", "testpassword")
 
 	var (
 		conf *Config
@@ -32,7 +32,7 @@ func TestNewConfig(t *testing.T) {
 	if assert.NoError(err) {
 		assert.Equal("mysql", conf.Driver())
 		assert.Equal("github.com/go-sql-driver/mysql", conf.Import())
-		assert.Equal("mysql://kamimai:passwd@127.0.0.1:3306/kamimai?charset=utf8", conf.Dsn())
+		assert.Equal("mysql://testuser:testpassword@127.0.0.1:3306/kamimai?charset=utf8", conf.Dsn())
 	}
 
 	var (

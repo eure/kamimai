@@ -1,5 +1,16 @@
 box: google/golang
 
+services:
+  - wercker/mysql
+
+services:
+  - id: mysql
+    env:
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: test_user
+      MYSQL_PASSWORD: test_password
+      MYSQL_DATABASE: kamimai
+
 # Build definition
 build:
   # The steps that will be executed on build
@@ -31,4 +42,3 @@ build:
           make lint
           make vet
           go test -v ./...
-

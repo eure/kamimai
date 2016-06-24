@@ -22,6 +22,15 @@ type (
 	}
 )
 
+// MustNewConfig returns a new config. dir cannot be empty.
+func MustNewConfig(dir string) *Config {
+	c, err := NewConfig(dir)
+	if err != nil {
+		panic(err)
+	}
+	return c
+}
+
 // NewConfig returns a new config. dir cannot be empty.
 func NewConfig(dir string) (*Config, error) {
 	files, err := ioutil.ReadDir(dir)

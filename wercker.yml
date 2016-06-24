@@ -26,6 +26,7 @@ build:
         code: |
           cd $WERCKER_SOURCE_DIR
           go get -d ./...
+          go get -d github.com/BurntSushi/toml
           go get -d github.com/stretchr/testify
           go get -u github.com/golang/lint/golint
 

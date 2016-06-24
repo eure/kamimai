@@ -1,18 +1,43 @@
 package core
 
 type (
-	// A Migration manages migration files.
+	// A Migration manages migration files for service.
 	Migration struct {
-		current uint64
+		version uint64
 	}
+
 	// A Migrations collects Migration for sorting.
-	Migrations []Migration
+	Migrations []*Migration
 )
 
-func (m *Migration) WithCurrent(v interface{}) *Migration {
+// NewMigration returns a new Migration pointer that can be chained with builder methods to
+// set multiple configuration values inline without using pointers.
+func NewMigration() *Migration {
+	return &Migration{}
+}
+
+// WithVersion sets a config version value returning a Config pointer
+// for chaining.
+func (m *Migration) WithVersion(v interface{}) *Migration {
 	switch v := v.(type) {
+	case int:
+		m.version = (uint64)(v)
+	case int8:
+		m.version = (uint64)(v)
+	case int16:
+		m.version = (uint64)(v)
+	case int32:
+		m.version = (uint64)(v)
+	case int64:
+		m.version = (uint64)(v)
+	case uint8:
+		m.version = (uint64)(v)
+	case uint16:
+		m.version = (uint64)(v)
+	case uint32:
+		m.version = (uint64)(v)
 	case uint64:
-		m.current = v
+		m.version = v
 	}
 	return m
 }
@@ -27,7 +52,7 @@ func (m Migrations) Len() int {
 // index i should sort before the element with index j.
 // Required by Sort Interface{}
 func (m Migrations) Less(i, j int) bool {
-	return m[i].Version < m[j].Version
+	return m[i].version < m[j].version
 }
 
 // Swap swaps the elements with indexes i and j.

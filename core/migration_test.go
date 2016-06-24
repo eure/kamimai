@@ -10,7 +10,7 @@ import (
 func TestMigration(t *testing.T) {
 	assert := assert.New(t)
 
-	mig := NewMigration().WithVersion(123)
+	mig := NewMigration(nil).WithVersion(123)
 	assert.EqualValues(123, mig.version)
 
 	mig.WithVersion(101)
@@ -21,12 +21,12 @@ func TestSortMigrations(t *testing.T) {
 	assert := assert.New(t)
 
 	migs := (Migrations)([]*Migration{
-		NewMigration().WithVersion(123),
-		NewMigration().WithVersion(12),
-		NewMigration().WithVersion(1023),
-		NewMigration().WithVersion(383),
-		NewMigration().WithVersion(971),
-		NewMigration().WithVersion(184),
+		NewMigration(nil).WithVersion(123),
+		NewMigration(nil).WithVersion(12),
+		NewMigration(nil).WithVersion(1023),
+		NewMigration(nil).WithVersion(383),
+		NewMigration(nil).WithVersion(971),
+		NewMigration(nil).WithVersion(184),
 	})
 
 	sort.Sort(migs)

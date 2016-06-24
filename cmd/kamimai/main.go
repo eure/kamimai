@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"text/template"
+
+	"github.com/kaneshin/kamimai/core"
 )
 
 var (
@@ -17,11 +19,15 @@ var (
 	env     = flag.String("env", "", "config environment to use")
 	help    = flag.String("help", "", "show help")
 	version = flag.String("version", "", "print the version")
+
+	config *core.Config
 )
 
 func main() {
 	flag.Usage = usage
 	flag.Parse()
+	// Load config
+	config = core.MustNewConfig(*dirPath).WithEnv(*env)
 	os.Exit(run(flag.Args()))
 }
 

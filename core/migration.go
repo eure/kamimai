@@ -4,6 +4,7 @@ type (
 	// A Migration manages migration files for service.
 	Migration struct {
 		version uint64
+		config  *Config
 	}
 
 	// A Migrations collects Migration for sorting.
@@ -12,8 +13,8 @@ type (
 
 // NewMigration returns a new Migration pointer that can be chained with builder methods to
 // set multiple configuration values inline without using pointers.
-func NewMigration() *Migration {
-	return &Migration{}
+func NewMigration(c *Config) *Migration {
+	return &Migration{config: c}
 }
 
 // WithVersion sets a config version value returning a Config pointer

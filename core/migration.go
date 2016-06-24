@@ -1,46 +1,127 @@
 package core
 
+import (
+	"sort"
+)
+
+const (
+	notFoundIndex = 0xffff
+)
+
 type (
-	// A Migration manages migration files for service.
-	Migration struct {
+	// A Service manages for kamimai.
+	Service struct {
 		version uint64
 		config  *Config
+		data    Migrations
+	}
+
+	// A Migration manages migration files.
+	Migration struct {
+		version uint64
 	}
 
 	// A Migrations collects Migration for sorting.
 	Migrations []*Migration
 )
 
+func toUint64(v interface{}) uint64 {
+	switch v := v.(type) {
+	case int:
+		return (uint64)(v)
+	case int8:
+		return (uint64)(v)
+	case int16:
+		return (uint64)(v)
+	case int32:
+		return (uint64)(v)
+	case int64:
+		return (uint64)(v)
+	case uint8:
+		return (uint64)(v)
+	case uint16:
+		return (uint64)(v)
+	case uint32:
+		return (uint64)(v)
+	case uint64:
+		return v
+	}
+	return 0
+}
+
+// NewService returns a new Service pointer that can be chained with builder methods to
+// set multiple configuration values inline without using pointers.
+func NewService(c *Config) *Service {
+	svc := &Service{config: c}
+
+	var migs Migrations
+	sort.Sort(migs)
+	svc.data = migs
+
+	return svc
+}
+
+// WithVersion sets a config version value returning a Config pointer
+// for chaining.
+func (s *Service) WithVersion(v interface{}) *Service {
+	s.version = toUint64(v)
+	return s
+}
+
+func (s Service) step(n int) error {
+	idx := s.data.index(Migration{version: s.version})
+	_ = idx
+	return nil
+}
+
+// Up upgrades migration version.
+func (s Service) Up() error {
+	return nil
+}
+
+// Down downgrades migration version.
+func (s Service) Down() error {
+	return nil
+}
+
+// Next upgrades migration version.
+func (s Service) Next() error {
+	return s.step(1)
+}
+
+// Prev downgrades migration version.
+func (s Service) Prev() error {
+	return s.step(-1)
+}
+
+//////////////////////////////
+// Migration
+//////////////////////////////
+
 // NewMigration returns a new Migration pointer that can be chained with builder methods to
 // set multiple configuration values inline without using pointers.
-func NewMigration(c *Config) *Migration {
-	return &Migration{config: c}
+func NewMigration() *Migration {
+	return &Migration{}
 }
 
 // WithVersion sets a config version value returning a Config pointer
 // for chaining.
 func (m *Migration) WithVersion(v interface{}) *Migration {
-	switch v := v.(type) {
-	case int:
-		m.version = (uint64)(v)
-	case int8:
-		m.version = (uint64)(v)
-	case int16:
-		m.version = (uint64)(v)
-	case int32:
-		m.version = (uint64)(v)
-	case int64:
-		m.version = (uint64)(v)
-	case uint8:
-		m.version = (uint64)(v)
-	case uint16:
-		m.version = (uint64)(v)
-	case uint32:
-		m.version = (uint64)(v)
-	case uint64:
-		m.version = v
-	}
+	m.version = toUint64(v)
 	return m
+}
+
+//////////////////////////////
+// Migrations
+//////////////////////////////
+
+func (m Migrations) index(mig Migration) int {
+	for i, v := range m {
+		if v.version == mig.version {
+			return i
+		}
+	}
+	return int(notFoundIndex)
 }
 
 // Len is the number of elements in the collection.

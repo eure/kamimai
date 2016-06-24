@@ -7,10 +7,20 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestService(t *testing.T) {
+	assert := assert.New(t)
+
+	svc := NewService(nil).WithVersion(123)
+	assert.EqualValues(123, svc.version)
+
+	svc.WithVersion(101)
+	assert.EqualValues(101, svc.version)
+}
+
 func TestMigration(t *testing.T) {
 	assert := assert.New(t)
 
-	mig := NewMigration(nil).WithVersion(123)
+	mig := NewMigration().WithVersion(123)
 	assert.EqualValues(123, mig.version)
 
 	mig.WithVersion(101)
@@ -21,12 +31,12 @@ func TestSortMigrations(t *testing.T) {
 	assert := assert.New(t)
 
 	migs := (Migrations)([]*Migration{
-		NewMigration(nil).WithVersion(123),
-		NewMigration(nil).WithVersion(12),
-		NewMigration(nil).WithVersion(1023),
-		NewMigration(nil).WithVersion(383),
-		NewMigration(nil).WithVersion(971),
-		NewMigration(nil).WithVersion(184),
+		NewMigration().WithVersion(123),
+		NewMigration().WithVersion(12),
+		NewMigration().WithVersion(1023),
+		NewMigration().WithVersion(383),
+		NewMigration().WithVersion(971),
+		NewMigration().WithVersion(184),
 	})
 
 	sort.Sort(migs)
@@ -36,4 +46,26 @@ func TestSortMigrations(t *testing.T) {
 	assert.EqualValues(383, migs[3].version)
 	assert.EqualValues(971, migs[4].version)
 	assert.EqualValues(1023, migs[5].version)
+}
+
+func TestMigrationsIndex(t *testing.T) {
+	assert := assert.New(t)
+
+	migs := (Migrations)([]*Migration{
+		NewMigration().WithVersion(123),
+		NewMigration().WithVersion(12),
+		NewMigration().WithVersion(1023),
+		NewMigration().WithVersion(383),
+		NewMigration().WithVersion(971),
+		NewMigration().WithVersion(184),
+	})
+	assert.EqualValues(notFoundIndex, migs.index(Migration{version: 1000000}))
+
+	assert.Equal(1, migs.index(Migration{version: 12}))
+	assert.Equal(2, migs.index(Migration{version: 1023}))
+
+	sort.Sort(migs)
+
+	assert.Equal(0, migs.index(Migration{version: 12}))
+	assert.Equal(5, migs.index(Migration{version: 1023}))
 }

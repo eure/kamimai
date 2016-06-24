@@ -21,17 +21,16 @@ func doUpCmd(cmd *Cmd, args ...string) error {
 		return err
 	}
 
-	// migration files
-	mig := core.NewMigration(config).WithVersion(current)
-	_ = mig
+	svc := core.NewService(config).WithVersion(current)
+	_ = svc
 
 	// All
-	// if err := mig.Up(); err != nil {
+	// if err := svc.Up(); err != nil {
 	// 	return err
 	// }
 
 	// Just one
-	// if err := mig.Next(); err != nil {
+	// if err := svc.Next(); err != nil {
 	// 	return err
 	// }
 

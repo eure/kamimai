@@ -21,17 +21,16 @@ func doDownCmd(cmd *Cmd, args ...string) error {
 		return err
 	}
 
-	// migration files
-	mig := core.NewMigration(config).WithVersion(current)
-	_ = mig
+	svc := core.NewService(config).WithVersion(current)
+	_ = svc
 
 	// All
-	// if err := mig.Down(); err != nil {
+	// if err := svc.Down(); err != nil {
 	// 	return err
 	// }
 
 	// Just one
-	// if err := mig.Prev(); err != nil {
+	// if err := svc.Prev(); err != nil {
 	// 	return err
 	// }
 

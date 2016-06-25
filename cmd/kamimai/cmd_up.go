@@ -21,13 +21,15 @@ func doUpCmd(cmd *Cmd, args ...string) error {
 		return err
 	}
 
-	svc := core.NewService(config).WithVersion(current)
-	_ = svc
+	// generate a service
+	svc := core.NewService(config).
+		WithVersion(current).
+		WithDriver(driver)
 
 	// All
-	// if err := svc.Up(); err != nil {
-	// 	return err
-	// }
+	if err := svc.Up(); err != nil {
+		return err
+	}
 
 	// Just one
 	// if err := svc.Next(); err != nil {

@@ -49,6 +49,12 @@ func (d *MySQL) Version() core.Version {
 	return d
 }
 
+// Migrate applies migration file.
+func (d *MySQL) Migrate(m *core.Migration) error {
+	// TODO:
+	return nil
+}
+
 // Insert inserts the given migration version.
 func (d *MySQL) Insert(val uint64) error {
 	query := fmt.Sprintf(`INSERT INTO %s (version) VALUES (%d)`,

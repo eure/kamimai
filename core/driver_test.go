@@ -9,11 +9,10 @@ import (
 type drv struct {
 }
 
-func (d *drv) Open(_ string) error { return nil }
-func (d *drv) Close() error        { return nil }
-
-// func (d *drv) Migrate(migration Migration) error { return nil }
-func (d *drv) Version() Version { return nil }
+func (d *drv) Open(_ string) error          { return nil }
+func (d *drv) Close() error                 { return nil }
+func (d *drv) Migrate(mig *Migration) error { return nil }
+func (d *drv) Version() Version             { return nil }
 
 func TestRegisterDriver(t *testing.T) {
 	assert := assert.New(t)

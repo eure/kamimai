@@ -20,7 +20,7 @@ type (
 		// It will receive a file which the driver should apply
 		// to its backend or whatever. The migration function should use
 		// the pipe channel to return any errors or other useful information.
-		// Migrate(Migration) error
+		Migrate(*Migration) error
 
 		// Version returns a version interface.
 		Version() Version

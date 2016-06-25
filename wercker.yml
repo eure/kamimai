@@ -25,9 +25,10 @@ build:
         name: go get
         code: |
           cd $WERCKER_SOURCE_DIR
-          go get -d ./...
+          go get -d github.com/kaneshin/kamimai
+          go get -d github.com/go-sql-driver/mysql
+          go get -d github.com/stretchr/testify/assert
           go get -d github.com/BurntSushi/toml
-          go get -d github.com/stretchr/testify
           go get -u github.com/golang/lint/golint
 
     # build the package

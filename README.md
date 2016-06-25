@@ -1,4 +1,6 @@
-# Kamimai
+# Kamimai - 紙舞
+
+A migration manager written in Golang. Use it in run commands via the CLI.
 
 ## Badges
 
@@ -29,6 +31,18 @@ Type the following line to install `kamimai` package.
 $ go get -d github.com/kaneshin/kamimai
 ```
 
+
+## Drivers
+
+### Availables
+
+- MySQL
+
+### Plan
+
+- SQLite
+- PostgreSQL
+- _and more_
 
 ## License
 

@@ -1,6 +1,7 @@
 package core
 
 import (
+	"github.com/kaneshin/kamimai/core/internal/cast"
 	"sort"
 )
 
@@ -25,30 +26,6 @@ type (
 	Migrations []*Migration
 )
 
-func toUint64(v interface{}) uint64 {
-	switch v := v.(type) {
-	case int:
-		return (uint64)(v)
-	case int8:
-		return (uint64)(v)
-	case int16:
-		return (uint64)(v)
-	case int32:
-		return (uint64)(v)
-	case int64:
-		return (uint64)(v)
-	case uint8:
-		return (uint64)(v)
-	case uint16:
-		return (uint64)(v)
-	case uint32:
-		return (uint64)(v)
-	case uint64:
-		return v
-	}
-	return 0
-}
-
 // NewService returns a new Service pointer that can be chained with builder methods to
 // set multiple configuration values inline without using pointers.
 func NewService(c *Config) *Service {
@@ -64,7 +41,7 @@ func NewService(c *Config) *Service {
 // WithVersion sets a config version value returning a Config pointer
 // for chaining.
 func (s *Service) WithVersion(v interface{}) *Service {
-	s.version = toUint64(v)
+	s.version = cast.Uint64(v)
 	return s
 }
 
@@ -107,7 +84,7 @@ func NewMigration() *Migration {
 // WithVersion sets a config version value returning a Config pointer
 // for chaining.
 func (m *Migration) WithVersion(v interface{}) *Migration {
-	m.version = toUint64(v)
+	m.version = cast.Uint64(v)
 	return m
 }
 

@@ -51,7 +51,17 @@ func (d *MySQL) Version() core.Version {
 
 // Migrate applies migration file.
 func (d *MySQL) Migrate(m *core.Migration) error {
-	// TODO:
+	b, err := m.Read()
+	if err != nil {
+		return err
+	}
+	_, err = d.db.Exec(string(b))
+	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
+		return err
+	}
+	if err := d.Insert(m.Version()); err != nil {
+		return err
+	}
 	return nil
 }
 

@@ -7,11 +7,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestNewConfig(t *testing.T) {
-	assert := assert.New(t)
+func init() {
 	os.Clearenv()
 	os.Setenv("MYSQL_USER", "testuser")
 	os.Setenv("MYSQL_PASSWORD", "testpassword")
+}
+
+func testMustNewConfig(t *testing.T) *Config {
+	conf, err := NewConfig("../examples/mysql")
+	if assert.NoError(t, err) {
+		if assert.NotNil(t, conf) {
+			conf.WithEnv("development")
+		}
+	}
+	return conf
+}
+
+func TestNewConfig(t *testing.T) {
+	assert := assert.New(t)
 
 	var (
 		conf *Config

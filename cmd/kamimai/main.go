@@ -7,6 +7,7 @@ import (
 	"text/template"
 
 	"github.com/kaneshin/kamimai/core"
+	_ "github.com/kaneshin/kamimai/driver"
 )
 
 var (
@@ -15,8 +16,6 @@ var (
 		downCmd,
 	}
 
-	dirPath = flag.String("path", "", "migration dir containing config")
-	env     = flag.String("env", "", "config environment to use")
 	help    = flag.String("help", "", "show help")
 	version = flag.String("version", "", "print the version")
 
@@ -26,8 +25,6 @@ var (
 func main() {
 	flag.Usage = usage
 	flag.Parse()
-	// Load config
-	config = core.MustNewConfig(*dirPath).WithEnv(*env)
 	os.Exit(run(flag.Args()))
 }
 
@@ -54,6 +51,7 @@ func run(args []string) int {
 	}
 
 	if err := cmd.Exec(args[1:]); err != nil {
+		panic(err)
 		return 1
 	}
 

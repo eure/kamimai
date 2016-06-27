@@ -14,6 +14,7 @@ type (
 	Config struct {
 		data map[string]internal
 		env  string
+		dir  string
 	}
 
 	internal struct {
@@ -38,7 +39,7 @@ func NewConfig(dir string) (*Config, error) {
 		return nil, err
 	}
 
-	conf := Config{}
+	conf := Config{dir: dir}
 	for _, f := range files {
 		fpath := filepath.Join(dir, f.Name())
 
@@ -83,6 +84,11 @@ func MergeConfig(c ...*Config) *Config {
 func (c *Config) WithEnv(env string) *Config {
 	c.env = env
 	return c
+}
+
+// Dir returns a config file existing path name.
+func (c Config) Dir() string {
+	return c.dir
 }
 
 // Import returns an import path.

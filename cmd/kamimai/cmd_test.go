@@ -30,19 +30,16 @@ func TestCmd(t *testing.T) {
 
 	var err error
 
+	args := []string{"-path=../../examples/testdata", "-env=development"}
+
 	initTestCmd()
-	err = testCmd.Exec(nil)
+	err = testCmd.Exec(args)
 	assert.NoError(err)
 	assert.Equal(0, len(testCmd.flag.Args()))
 
-	initTestCmd()
-	err = testCmd.Exec([]string{"hello"})
-	assert.NoError(err)
-	assert.Equal(1, len(testCmd.flag.Args()))
-
 	// should be return an error.
 	initTestCmd()
-	err = testCmd.Exec([]string{"error"})
+	err = testCmd.Exec(append(args, "error"))
 	assert.Error(err)
 	assert.Equal(1, len(testCmd.flag.Args()))
 }

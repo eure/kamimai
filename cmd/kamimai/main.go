@@ -51,7 +51,6 @@ func run(args []string) int {
 	}
 
 	if err := cmd.Exec(args[1:]); err != nil {
-		panic(err)
 		return 1
 	}
 

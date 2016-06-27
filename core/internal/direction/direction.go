@@ -1,8 +1,13 @@
 package direction
 
 const (
+	// Unknown XXX
 	Unknown = iota
+
+	// Up XXX
 	Up
+
+	// Down XXX
 	Down
 )
 

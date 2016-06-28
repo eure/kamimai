@@ -1,7 +1,10 @@
 package main
 
 import (
+	"database/sql"
+
 	"github.com/kaneshin/kamimai/core"
+	"github.com/kaneshin/kamimai/internal/cast"
 )
 
 var (
@@ -30,13 +33,23 @@ func doDownCmd(cmd *Cmd, args ...string) error {
 		WithVersion(current).
 		WithDriver(driver)
 
-	// All
-	// if err := svc.Down(); err != nil {
-	// 	return err
-	// }
+	if err := driver.Transaction(func(tx *sql.Tx) error {
+		if len(args) == 0 {
+			// Just one
+			if err := svc.Prev(); err != nil {
+				return err
+			}
+			return nil
+		}
 
-	// Just one
-	if err := svc.Prev(); err != nil {
+		for i := cast.Int(args[0]); i < 0; i++ {
+			if err := svc.Prev(); err != nil {
+				return err
+			}
+		}
+
+		return nil
+	}); err != nil {
 		return err
 	}
 

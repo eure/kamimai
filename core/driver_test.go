@@ -1,6 +1,7 @@
 package core
 
 import (
+	"database/sql"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,11 +10,12 @@ import (
 type drv struct {
 }
 
-func (d *drv) Open(_ string) error          { return nil }
-func (d *drv) Close() error                 { return nil }
-func (d *drv) Ext() string                  { return "" }
-func (d *drv) Migrate(mig *Migration) error { return nil }
-func (d *drv) Version() Version             { return nil }
+func (d *drv) Open(_ string) error                     { return nil }
+func (d *drv) Close() error                            { return nil }
+func (d *drv) Ext() string                             { return "" }
+func (d *drv) Transaction(f func(*sql.Tx) error) error { return nil }
+func (d *drv) Migrate(mig *Migration) error            { return nil }
+func (d *drv) Version() Version                        { return nil }
 
 func TestRegisterDriver(t *testing.T) {
 	assert := assert.New(t)

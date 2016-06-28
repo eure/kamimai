@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"strings"
+	"sync"
 
 	"github.com/go-sql-driver/mysql"
 	"github.com/kaneshin/kamimai/core"
@@ -14,6 +15,8 @@ type (
 	// MySQL driver object.
 	MySQL struct {
 		db *sql.DB
+		tx *sql.Tx
+		mu sync.Mutex
 	}
 )
 
@@ -51,6 +54,49 @@ func (d *MySQL) Ext() string {
 	return ".sql"
 }
 
+// Transaction starts a db transaction. The isolation level is dependent on the
+// driver.
+func (d *MySQL) Transaction(fn func(*sql.Tx) error) error {
+	d.mu.Lock()
+	defer func() {
+		d.tx = nil
+		d.mu.Unlock()
+	}()
+
+	tx, err := d.db.Begin()
+	if err != nil {
+		return err
+	}
+	d.tx = tx
+
+	// Procedure
+	if err := fn(d.tx); err != nil {
+		if rberr := d.tx.Rollback(); rberr != nil {
+			return rberr
+		}
+		return err
+	}
+
+	// Commit
+	if err := d.tx.Commit(); err != nil {
+		if rberr := d.tx.Rollback(); rberr != nil {
+			return rberr
+		}
+		return err
+	}
+
+	return nil
+}
+
+// Exec executes a query without returning any rows. The args are for any
+// placeholder parameters in the query.
+func (d *MySQL) Exec(query string, args ...interface{}) (sql.Result, error) {
+	if d.tx != nil {
+		return d.tx.Exec(query, args...)
+	}
+	return d.db.Exec(query, args...)
+}
+
 // Version returns a version interface.
 func (d *MySQL) Version() core.Version {
 	return d
@@ -62,7 +108,7 @@ func (d *MySQL) Migrate(m *core.Migration) error {
 	if err != nil {
 		return err
 	}
-	_, err = d.db.Exec(string(b))
+	_, err = d.Exec(string(b))
 	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
 		return err
 	}
@@ -74,7 +120,7 @@ func (d *MySQL) Insert(val uint64) error {
 	query := fmt.Sprintf(`INSERT INTO %s (version) VALUES (%d)`,
 		versionTableName, val)
 
-	_, err := d.db.Exec(query)
+	_, err := d.Exec(query)
 	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
 		return err
 	}
@@ -86,7 +132,7 @@ func (d *MySQL) Delete(val uint64) error {
 	query := fmt.Sprintf(`DELETE FROM %s WHERE version = %d`,
 		versionTableName, val)
 
-	_, err := d.db.Exec(query)
+	_, err := d.Exec(query)
 	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
 		return err
 	}
@@ -114,7 +160,7 @@ func (d *MySQL) Create() error {
 	const query = `CREATE TABLE IF NOT EXISTS ` +
 		versionTableName + ` (version BIGINT NOT NULL PRIMARY KEY);`
 
-	_, err := d.db.Exec(query)
+	_, err := d.Exec(query)
 	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
 		return err
 	}
@@ -125,7 +171,7 @@ func (d *MySQL) Create() error {
 func (d *MySQL) Drop() error {
 	const query = `DROP TABLE IF EXISTS ` + versionTableName
 
-	_, err := d.db.Exec(query)
+	_, err := d.Exec(query)
 	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
 		return err
 	}

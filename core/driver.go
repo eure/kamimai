@@ -1,6 +1,7 @@
 package core
 
 import (
+	"database/sql"
 	"sync"
 )
 
@@ -20,6 +21,10 @@ type (
 		// suffix beginning at the final dot in the final element of path; it is
 		// empty if there is no dot.
 		Ext() string
+
+		// Transaction starts a db transaction. The isolation level is dependent on the
+		// driver.
+		Transaction(func(*sql.Tx) error) error
 
 		// Migrate is the heart of the driver.
 		// It will receive a file which the driver should apply

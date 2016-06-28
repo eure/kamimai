@@ -31,14 +31,14 @@ func doUpCmd(cmd *Cmd, args ...string) error {
 		WithDriver(driver)
 
 	// All
-	// if err := svc.Up(); err != nil {
-	// 	return err
-	// }
-
-	// Just one
-	if err := svc.Next(); err != nil {
+	if err := svc.Up(); err != nil {
 		return err
 	}
+
+	// Just one
+	// if err := svc.Next(); err != nil {
+	// 	return err
+	// }
 
 	return nil
 }

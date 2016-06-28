@@ -44,6 +44,13 @@ func (d *MySQL) Close() error {
 	return d.db.Close()
 }
 
+// Ext returns the sql file extension used by path. The extension is the
+// suffix beginning at the final dot in the final element of path; it is
+// empty if there is no dot.
+func (d *MySQL) Ext() string {
+	return ".sql"
+}
+
 // Version returns a version interface.
 func (d *MySQL) Version() core.Version {
 	return d

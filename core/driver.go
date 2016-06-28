@@ -16,6 +16,11 @@ type (
 		// Close any open connection here.
 		Close() error
 
+		// Ext returns the sql file extension used by path. The extension is the
+		// suffix beginning at the final dot in the final element of path; it is
+		// empty if there is no dot.
+		Ext() string
+
 		// Migrate is the heart of the driver.
 		// It will receive a file which the driver should apply
 		// to its backend or whatever. The migration function should use

@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"text/template"
 
@@ -14,6 +15,7 @@ var (
 	cmds = []*Cmd{
 		upCmd,
 		downCmd,
+		createCmd,
 	}
 
 	help    = flag.String("help", "", "show help")
@@ -21,6 +23,11 @@ var (
 
 	config *core.Config
 )
+
+func init() {
+	log.SetPrefix("kamimai: ")
+	log.SetFlags(0)
+}
 
 func main() {
 	flag.Usage = usage

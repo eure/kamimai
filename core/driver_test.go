@@ -11,6 +11,7 @@ type drv struct {
 
 func (d *drv) Open(_ string) error          { return nil }
 func (d *drv) Close() error                 { return nil }
+func (d *drv) Ext() string                  { return "" }
 func (d *drv) Migrate(mig *Migration) error { return nil }
 func (d *drv) Version() Version             { return nil }
 

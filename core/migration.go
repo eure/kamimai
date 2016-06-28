@@ -2,6 +2,7 @@ package core
 
 import (
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path"
@@ -62,6 +63,8 @@ func (s Service) walker(indexPath map[uint64]*Migration) func(path string, info 
 
 		if s.direction == direction.Get(name) {
 			mig.name = filepath.Clean(filepath.Join(wd, path))
+		} else if s.direction == direction.Unknown {
+			mig.name = filepath.Clean(filepath.Join(wd, path))
 		}
 
 		return nil
@@ -90,10 +93,20 @@ func (s *Service) WithDriver(d Driver) *Service {
 	return s
 }
 
+func (s Service) migrationsDir() string {
+	return path.Clean(path.Join(s.config.Dir(), migrationsDir))
+}
+
+// MakeMigrationsDir creates a directory named path, along with any necessary
+// parents, and returns nil, or else returns an error. If path is
+// already a directory, MkdirAll does nothing and returns nil.
+func (s *Service) MakeMigrationsDir() error {
+	return os.MkdirAll(s.migrationsDir(), 0777)
+}
+
 func (s *Service) apply() {
-	c := s.config
 	index := map[uint64]*Migration{}
-	filepath.Walk(path.Join(c.Dir(), migrationsDir), s.walker(index))
+	filepath.Walk(s.migrationsDir(), s.walker(index))
 
 	list := make([]*Migration, len(index))
 	i := 0
@@ -173,6 +186,41 @@ func (s *Service) Prev() error {
 	return s.step(-1)
 }
 
+// NextMigration returns next version migrations.
+func (s *Service) NextMigration(name string) (up *Migration, down *Migration, err error) {
+	s.apply()
+
+	// initialize default variables for making migrations.
+	up, down = &Migration{version: 1, name: ""}, &Migration{version: 1, name: ""}
+	ver := "001"
+
+	// gets the oldest migration version file.
+	if obj := s.data.first(); obj != nil {
+		// for version format
+		_, file := filepath.Split(obj.name)
+		ver = version.Format(file)
+	}
+	if obj := s.data.last(); obj != nil {
+		// for version number
+		v := obj.version + 1
+		up.version, down.version = v, v
+	}
+
+	// [ver]_[name]_[direction-suffix][.ext]
+	base := fmt.Sprintf("%s_%s_%%s%%s", ver, name)
+	// including dot
+	ext := s.driver.Ext()
+
+	// up
+	n := fmt.Sprintf(base, up.version, direction.Suffix(direction.Up), ext)
+	up.name = filepath.Join(s.migrationsDir(), n)
+	// down
+	n = fmt.Sprintf(base, down.version, direction.Suffix(direction.Down), ext)
+	down.name = filepath.Join(s.migrationsDir(), n)
+
+	return
+}
+
 //////////////////////////////
 // Migration
 //////////////////////////////
@@ -207,6 +255,11 @@ func (m Migration) Read() ([]byte, error) {
 	return ioutil.ReadAll(file)
 }
 
+// Name returns a file name.
+func (m Migration) Name() string {
+	return m.name
+}
+
 //////////////////////////////
 // Migrations
 //////////////////////////////
@@ -218,6 +271,21 @@ func (m Migrations) index(mig Migration) int {
 		}
 	}
 	return int(notFoundIndex)
+}
+
+func (m Migrations) first() *Migration {
+	if m.Len() == 0 {
+		return nil
+	}
+	return m[0]
+}
+
+func (m Migrations) last() *Migration {
+	c := m.Len()
+	if c == 0 {
+		return nil
+	}
+	return m[c-1]
 }
 
 // Len is the number of elements in the collection.

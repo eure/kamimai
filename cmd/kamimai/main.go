@@ -20,6 +20,9 @@ var (
 
 	help    = flag.String("help", "", "show help")
 	version = flag.String("version", "", "print the version")
+	dirPath = flag.String("path", "", "migration dir containing config")
+	env     = flag.String("env", "", "config environment to use")
+	dryRun  = flag.Bool("dry-run", false, "")
 
 	config *core.Config
 )

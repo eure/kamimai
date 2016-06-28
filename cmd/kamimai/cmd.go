@@ -19,8 +19,6 @@ type (
 
 // Exec executes a command with arguments.
 func (c *Cmd) Exec(args []string) error {
-	dirPath := c.flag.String("path", "", "migration dir containing config")
-	env := c.flag.String("env", "", "config environment to use")
 	c.flag.Parse(args)
 
 	// Load config

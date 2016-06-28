@@ -10,7 +10,7 @@ import (
 var (
 	createCmd = &Cmd{
 		Name:  "create",
-		Usage: "",
+		Usage: "create a new migration files",
 		Run:   doCreateCmd,
 	}
 )
@@ -45,8 +45,10 @@ func doCreateCmd(cmd *Cmd, args ...string) error {
 		}
 
 		name := v.Name()
-		if _, err := os.Create(name); err != nil {
-			log.Fatal(err)
+		if !*dryRun {
+			if _, err := os.Create(name); err != nil {
+				log.Fatal(err)
+			}
 		}
 
 		// print filename on stdout

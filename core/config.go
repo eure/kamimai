@@ -3,6 +3,7 @@ package core
 import (
 	"io/ioutil"
 	"os"
+	"path"
 	"path/filepath"
 
 	"github.com/BurntSushi/toml"
@@ -18,8 +19,9 @@ type (
 	}
 
 	internal struct {
-		Driver string `yaml:"driver"`
-		Dsn    string `yaml:"dsn"`
+		Driver    string `yaml:"driver"`
+		Dsn       string `yaml:"dsn"`
+		Directory string `yaml:"directory"`
 	}
 )
 
@@ -116,6 +118,16 @@ func (c Config) Driver() string {
 func (c Config) Dsn() string {
 	if d, ok := c.data[c.env]; ok {
 		return os.ExpandEnv(d.Dsn)
+	}
+	return ""
+}
+
+func (c Config) migrationsDir() string {
+	if d, ok := c.data[c.env]; ok {
+		if d.Directory == "" {
+			d.Directory = "migrations"
+		}
+		return path.Clean(path.Join(c.Dir(), d.Directory))
 	}
 	return ""
 }

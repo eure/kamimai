@@ -52,7 +52,7 @@ func doCreateCmd(cmd *Cmd, args ...string) error {
 		}
 
 		// print filename on stdout
-		log.Println("created", name)
+		log.Printf("created %s", name)
 	}
 
 	return nil

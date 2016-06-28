@@ -6,6 +6,24 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func TestSuffix(t *testing.T) {
+	assert := assert.New(t)
+
+	candidates := []struct {
+		value    int
+		expected string
+		message  string
+	}{
+		{value: Up, expected: "up", message: ""},
+		{value: Down, expected: "down", message: ""},
+		{value: Unknown, expected: "", message: ""},
+	}
+
+	for _, c := range candidates {
+		assert.Equal(c.expected, Suffix(c.value), c.message)
+	}
+}
+
 func TestGet(t *testing.T) {
 	assert := assert.New(t)
 

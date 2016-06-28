@@ -11,6 +11,17 @@ const (
 	Down
 )
 
+// Suffix returns a string for filename suffix.
+func Suffix(d int) string {
+	switch d {
+	case Up:
+		return "up"
+	case Down:
+		return "down"
+	}
+	return ""
+}
+
 // Get returns a string which contains numbers.
 func Get(name string) int {
 

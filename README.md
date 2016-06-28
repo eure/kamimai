@@ -4,6 +4,7 @@ A migration manager written in Golang. Use it in run commands via the CLI.
 
 ## Badges
 
+[![GoDoc](https://godoc.org/github.com/kaneshin/kamimai?status.svg)](https://godoc.org/github.com/kaneshin/kamimai)
 [![wercker status](https://app.wercker.com/status/d48b86471b7e1fdc5218d783f12b5685/s "wercker status")](https://app.wercker.com/project/bykey/d48b86471b7e1fdc5218d783f12b5685)
 
 

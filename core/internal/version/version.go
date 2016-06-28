@@ -1,6 +1,7 @@
 package version
 
 import (
+	"fmt"
 	"regexp"
 )
 
@@ -22,4 +23,19 @@ func Get(name string) string {
 	}
 
 	return ""
+}
+
+// Format returns a version format for printing.
+func Format(name string) string {
+
+	ver := Get(name)
+	if len(ver) == 0 {
+		return ""
+	}
+
+	if ver[0] != '0' {
+		return "%d"
+	}
+
+	return fmt.Sprintf("%%0%dd", len(ver))
 }

@@ -2,6 +2,7 @@ package cast
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/assert"
 )
@@ -10,6 +11,7 @@ func TestUint64(t *testing.T) {
 	assert := assert.New(t)
 
 	str := "123"
+	now, _ := time.Parse("20060102150405", "20160622150000")
 
 	candidates := []struct {
 		value    interface{}
@@ -26,6 +28,8 @@ func TestUint64(t *testing.T) {
 		{value: (*string)(nil), expected: 0, message: ""},
 		{value: str, expected: 123, message: ""},
 		{value: &str, expected: 123, message: ""},
+		{value: time.Time{}, expected: 0, message: ""},
+		{value: now, expected: 20160622150000, message: ""},
 	}
 
 	for _, c := range candidates {

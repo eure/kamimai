@@ -2,6 +2,7 @@ package cast
 
 import (
 	"strconv"
+	"time"
 )
 
 // Uint64 casts an interface value to a uint64.
@@ -33,6 +34,11 @@ func Uint64(v interface{}) uint64 {
 			n, _ := strconv.ParseUint(*v, 10, 64)
 			return n
 		}
+	case time.Time:
+		if v.IsZero() {
+			return 0
+		}
+		return Uint64(v.Format("20060102150405"))
 	}
 	return 0
 }

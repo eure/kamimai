@@ -66,9 +66,6 @@ func (d *MySQL) Migrate(m *core.Migration) error {
 	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
 		return err
 	}
-	if err := d.Insert(m.Version()); err != nil {
-		return err
-	}
 	return nil
 }
 
@@ -115,7 +112,7 @@ func (d *MySQL) Current() (uint64, error) {
 // Create creates
 func (d *MySQL) Create() error {
 	const query = `CREATE TABLE IF NOT EXISTS ` +
-		versionTableName + ` (version int not null primary key);`
+		versionTableName + ` (version BIGINT NOT NULL PRIMARY KEY);`
 
 	_, err := d.db.Exec(query)
 	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {

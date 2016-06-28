@@ -3,6 +3,7 @@ package core
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"sort"
@@ -106,31 +107,66 @@ func (s *Service) apply() {
 }
 
 func (s *Service) do(idx int) error {
+	drv := s.driver
+
 	migs := s.data
 	if !(0 <= idx && idx < migs.Len()) {
 		return errOutOfBoundsMigrations
 	}
-	return s.driver.Migrate(migs[idx])
+
+	mig := migs[idx]
+	if err := drv.Migrate(mig); err != nil {
+		return err
+	}
+
+	switch s.direction {
+	case direction.Up:
+		if err := drv.Version().Insert(mig.version); err != nil {
+			return err
+		}
+	case direction.Down:
+		if err := drv.Version().Delete(mig.version); err != nil {
+			return err
+		}
+	}
+
+	log.Println("applied", mig.Name())
+
+	return nil
 }
 
 func (s *Service) step(n int) error {
 	s.apply()
 
+	if s.version == 0 {
+		// init
+		if n > 0 {
+			// only up
+			for i := 0; i < n; i++ {
+				if err := s.do(i); err != nil {
+					return err
+				}
+			}
+		}
+		return nil
+	}
+
 	// gets current index of migrations
 	idx := s.data.index(Migration{version: s.version})
-	if s.version == 0 {
-		idx = 0
-	}
 
-	// direction of the migration.
-	sign := -1
 	if n > 0 {
-		sign = 1
-	}
-
-	for i := 0; i < sign*n; i++ {
-		if err := s.do(idx + sign*i); err != nil {
-			return err
+		// up
+		for i := 0; i < n; i++ {
+			if err := s.do(idx + i + 1); err != nil {
+				return err
+			}
+		}
+	} else {
+		// down
+		for i := 0; i < -n; i++ {
+			if err := s.do(idx - i); err != nil {
+				return err
+			}
 		}
 	}
 
@@ -162,13 +198,23 @@ func (s *Service) Down() error {
 // Next upgrades migration version.
 func (s *Service) Next() error {
 	s.direction = direction.Up
-	return s.step(1)
+	err := s.step(1)
+	switch err {
+	case errOutOfBoundsMigrations:
+		return nil
+	}
+	return err
 }
 
 // Prev downgrades migration version.
 func (s *Service) Prev() error {
 	s.direction = direction.Down
-	return s.step(-1)
+	err := s.step(-1)
+	switch err {
+	case errOutOfBoundsMigrations:
+		return nil
+	}
+	return err
 }
 
 // NextMigration returns next version migrations.

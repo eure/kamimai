@@ -30,7 +30,9 @@ func TestCmd(t *testing.T) {
 
 	var err error
 
-	args := []string{"-path=../../examples/testdata", "-env=development"}
+	*dirPath = "../../examples/testdata"
+	*env = "development"
+	args := []string{}
 
 	initTestCmd()
 	err = testCmd.Exec(args)

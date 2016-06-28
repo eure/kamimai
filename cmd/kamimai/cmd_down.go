@@ -16,13 +16,19 @@ func doDownCmd(cmd *Cmd, args ...string) error {
 
 	// driver
 	driver := core.GetDriver(config.Driver())
+	if err := driver.Open(config.Dsn()); err != nil {
+		return err
+	}
+
 	current, err := driver.Version().Current()
 	if err != nil {
 		return err
 	}
 
-	svc := core.NewService(config).WithVersion(current)
-	_ = svc
+	// generate a service
+	svc := core.NewService(config).
+		WithVersion(current).
+		WithDriver(driver)
 
 	// All
 	// if err := svc.Down(); err != nil {
@@ -30,9 +36,9 @@ func doDownCmd(cmd *Cmd, args ...string) error {
 	// }
 
 	// Just one
-	// if err := svc.Prev(); err != nil {
-	// 	return err
-	// }
+	if err := svc.Prev(); err != nil {
+		return err
+	}
 
 	return nil
 }

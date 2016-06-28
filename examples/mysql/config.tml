@@ -1,3 +1,8 @@
 [development]
 driver = "mysql"
 dsn = "mysql://$MYSQL_USER:$MYSQL_PASSWORD@/kamimai?charset=utf8"
+
+[test1]
+driver = "mysql"
+dsn = "mysql://$MYSQL_USER:$MYSQL_PASSWORD@/kamimai?charset=utf8"
+directory = "test1"

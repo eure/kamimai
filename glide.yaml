@@ -1,0 +1,5 @@
+package: github.com/kaneshin/kamimai
+import:
+- package: github.com/BurntSushi/toml
+- package: github.com/go-sql-driver/mysql
+- package: gopkg.in/yaml.v2

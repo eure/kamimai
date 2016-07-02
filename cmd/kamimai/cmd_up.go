@@ -10,7 +10,7 @@ import (
 var (
 	upCmd = &Cmd{
 		Name:  "up",
-		Usage: "",
+		Usage: "apply all available migrations",
 		Run:   doUpCmd,
 	}
 )
@@ -33,7 +33,8 @@ func doUpCmd(cmd *Cmd, args ...string) error {
 		WithVersion(current).
 		WithDriver(driver)
 
-	if err := driver.Transaction(func(tx *sql.Tx) error {
+	return driver.Transaction(func(tx *sql.Tx) error {
+
 		if len(args) == 0 {
 			// All
 			if err := svc.Up(); err != nil {
@@ -42,17 +43,10 @@ func doUpCmd(cmd *Cmd, args ...string) error {
 			return nil
 		}
 
-		for i := 0; i < cast.Int(args[0]); i++ {
-			// Just one
-			if err := svc.Next(); err != nil {
-				return err
-			}
+		val := cast.Int(args[0])
+		if val == 0 {
+			return nil
 		}
-
-		return nil
-	}); err != nil {
-		return err
-	}
-
-	return nil
+		return svc.Next(val)
+	})
 }

@@ -173,48 +173,44 @@ func (s *Service) step(n int) error {
 	return nil
 }
 
-// Up upgrades migration version.
-func (s *Service) Up() error {
+func (s *Service) up(n int) error {
 	s.direction = direction.Up
-	err := s.step(notFoundIndex)
+	err := s.step(n)
 	switch err {
 	case errOutOfBoundsMigrations:
 		return nil
 	}
 	return err
+}
+
+func (s *Service) down(n int) error {
+	s.direction = direction.Down
+	err := s.step(-n)
+	switch err {
+	case errOutOfBoundsMigrations:
+		return nil
+	}
+	return err
+}
+
+// Up upgrades migration version.
+func (s *Service) Up() error {
+	return s.up(notFoundIndex)
 }
 
 // Down downgrades migration version.
 func (s *Service) Down() error {
-	s.direction = direction.Down
-	err := s.step(-notFoundIndex)
-	switch err {
-	case errOutOfBoundsMigrations:
-		return nil
-	}
-	return err
+	return s.down(notFoundIndex)
 }
 
 // Next upgrades migration version.
-func (s *Service) Next() error {
-	s.direction = direction.Up
-	err := s.step(1)
-	switch err {
-	case errOutOfBoundsMigrations:
-		return nil
-	}
-	return err
+func (s *Service) Next(n int) error {
+	return s.up(n)
 }
 
 // Prev downgrades migration version.
-func (s *Service) Prev() error {
-	s.direction = direction.Down
-	err := s.step(-1)
-	switch err {
-	case errOutOfBoundsMigrations:
-		return nil
-	}
-	return err
+func (s *Service) Prev(n int) error {
+	return s.down(n)
 }
 
 // NextMigration returns next version migrations.

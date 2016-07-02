@@ -10,7 +10,7 @@ import (
 var (
 	downCmd = &Cmd{
 		Name:  "down",
-		Usage: "",
+		Usage: "rollback the latest applied migration",
 		Run:   doDownCmd,
 	}
 )
@@ -33,25 +33,20 @@ func doDownCmd(cmd *Cmd, args ...string) error {
 		WithVersion(current).
 		WithDriver(driver)
 
-	if err := driver.Transaction(func(tx *sql.Tx) error {
+	return driver.Transaction(func(tx *sql.Tx) error {
+
 		if len(args) == 0 {
 			// Just one
-			if err := svc.Prev(); err != nil {
+			if err := svc.Prev(1); err != nil {
 				return err
 			}
 			return nil
 		}
 
-		for i := cast.Int(args[0]); i < 0; i++ {
-			if err := svc.Prev(); err != nil {
-				return err
-			}
+		val := cast.Int(args[0])
+		if val == 0 {
+			return nil
 		}
-
-		return nil
-	}); err != nil {
-		return err
-	}
-
-	return nil
+		return svc.Prev(val)
+	})
 }

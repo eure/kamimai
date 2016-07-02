@@ -16,6 +16,7 @@ var (
 		upCmd,
 		downCmd,
 		createCmd,
+		// migrateCmd,
 	}
 
 	help    = flag.String("help", "", "show help")
@@ -75,26 +76,30 @@ func usage() {
 		"usage":       "kamimai [global options] command [command options] [arguments...]",
 		"version":     "0.0.1",
 		"author":      "kaneshin <kaneshin0120@gmail.com>",
-		"cmds": []map[string]interface{}{
-			map[string]interface{}{
-				"name":    "up",
-				"summary": "",
-			},
-			map[string]interface{}{
-				"name":    "down",
-				"summary": "",
-			},
-		},
 	}
-	opts := []map[string]interface{}{}
-	flag.VisitAll(func(f *flag.Flag) {
-		opt := map[string]interface{}{
-			"name":    f.Name,
-			"summary": f.Usage,
+
+	params["opts"] = func() (list []map[string]interface{}) {
+		flag.VisitAll(func(f *flag.Flag) {
+			opt := map[string]interface{}{
+				"name":    f.Name,
+				"summary": f.Usage,
+			}
+			list = append(list, opt)
+		})
+		return
+	}()
+
+	params["cmds"] = func() (list []map[string]interface{}) {
+		for _, c := range cmds {
+			cmd := map[string]interface{}{
+				"name":    c.Name,
+				"summary": c.Usage,
+			}
+			list = append(list, cmd)
 		}
-		opts = append(opts, opt)
-	})
-	params["opts"] = opts
+		return
+	}()
+
 	helpTemplate.Execute(os.Stdout, params)
 }
 

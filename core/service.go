@@ -213,6 +213,26 @@ func (s *Service) Prev(n int) error {
 	return s.down(n)
 }
 
+// Sync applies all migrations.
+func (s *Service) Sync() error {
+	s.direction = direction.Up
+	s.apply()
+
+	version := s.driver.Version()
+
+	for _, mig := range s.data {
+		if count := version.Count(mig.version); count == 0 {
+			// gets current index of migrations
+			idx := s.data.index(*mig)
+			if err := s.do(idx); err != nil {
+				return err
+			}
+		}
+	}
+
+	return nil
+}
+
 // NextMigration returns next version migrations.
 func (s *Service) NextMigration(name string) (up *Migration, down *Migration, err error) {
 	s.apply()

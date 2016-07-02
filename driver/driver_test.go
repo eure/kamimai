@@ -45,10 +45,12 @@ func testVersion(t *testing.T, version core.Version) {
 	}
 
 	assert.NoError(version.Insert(1))
+	assert.EqualValues(0, version.Count(100))
 	assert.NoError(version.Insert(100))
 	val, err = version.Current()
 	if assert.NoError(err) {
 		assert.EqualValues(100, val, "should be 100")
+		assert.EqualValues(1, version.Count(100))
 
 		// delete
 		assert.NoError(version.Delete(50))
@@ -61,6 +63,7 @@ func testVersion(t *testing.T, version core.Version) {
 			val, err = version.Current()
 			if assert.NoError(err) {
 				assert.EqualValues(1, val, "should be 1")
+				assert.EqualValues(0, version.Count(100))
 			}
 		}
 	}

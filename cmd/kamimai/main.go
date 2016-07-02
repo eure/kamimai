@@ -13,9 +13,10 @@ import (
 
 var (
 	cmds = []*Cmd{
+		createCmd,
 		upCmd,
 		downCmd,
-		createCmd,
+		syncCmd,
 		// migrateCmd,
 	}
 

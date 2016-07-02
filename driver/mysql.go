@@ -139,6 +139,18 @@ func (d *MySQL) Delete(val uint64) error {
 	return nil
 }
 
+// Count counts number of row the given migration version.
+func (d *MySQL) Count(val uint64) int {
+	query := fmt.Sprintf(`SELECT count(version) count FROM %s WHERE version = %d`,
+		versionTableName, val)
+
+	var count int
+	if err := d.db.QueryRow(query).Scan(&count); err != nil {
+		return 0
+	}
+	return count
+}
+
 // Current returns the current migration version.
 func (d *MySQL) Current() (uint64, error) {
 	const query = `SELECT version FROM ` +

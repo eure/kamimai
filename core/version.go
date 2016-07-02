@@ -9,6 +9,9 @@ type (
 		// Delete deletes the given migration version.
 		Delete(uint64) error
 
+		// Count counts number of row the given migration version.
+		Count(uint64) int
+
 		// Current returns the current migration version.
 		Current() (uint64, error)
 

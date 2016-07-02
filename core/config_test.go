@@ -35,7 +35,6 @@ func TestNewConfig(t *testing.T) {
 	assert.Nil(conf)
 	assert.Error(err)
 
-	assert.Equal("", Config{}.Import())
 	assert.Equal("", Config{}.Driver())
 	assert.Equal("", Config{}.Dsn())
 	assert.Equal("", Config{}.migrationsDir())
@@ -46,7 +45,6 @@ func TestNewConfig(t *testing.T) {
 	conf.WithEnv("development")
 	if assert.NoError(err) {
 		assert.Equal("mysql", conf.Driver())
-		assert.Equal("github.com/go-sql-driver/mysql", conf.Import())
 		assert.Equal("mysql://test_user:test_password@tcp(:)/kamimai?charset=utf8", conf.Dsn())
 		assert.Equal("../examples/testdata/migrations", conf.migrationsDir())
 	}
@@ -54,7 +52,6 @@ func TestNewConfig(t *testing.T) {
 	conf.WithEnv("test")
 	if assert.NoError(err) {
 		assert.Equal("mysql", conf.Driver())
-		assert.Equal("github.com/go-sql-driver/mysql", conf.Import())
 		assert.Equal("mysql://test_user:test_password@tcp(:)/kamimai?charset=utf8", conf.Dsn())
 		assert.Equal("../examples/testdata/test", conf.migrationsDir())
 	}

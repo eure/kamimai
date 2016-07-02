@@ -93,19 +93,6 @@ func (c Config) Dir() string {
 	return c.dir
 }
 
-// Import returns an import path.
-func (c Config) Import() string {
-	switch c.Driver() {
-	case "mymysql":
-		return "github.com/ziutek/mymysql/godrv"
-	case "mysql":
-		return "github.com/go-sql-driver/mysql"
-	case "sqlite3", "sqlite":
-		return "github.com/mattn/go-sqlite3"
-	}
-	return ""
-}
-
 // Driver returns a raw driver string.
 func (c Config) Driver() string {
 	if d, ok := c.data[c.env]; ok {

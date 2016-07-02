@@ -17,8 +17,13 @@ type (
 	}
 )
 
+var (
+	version uint64
+)
+
 // Exec executes a command with arguments.
 func (c *Cmd) Exec(args []string) error {
+	c.flag.Uint64Var(&version, "version", 0, "")
 	c.flag.Parse(args)
 
 	// Load config

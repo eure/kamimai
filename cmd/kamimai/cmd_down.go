@@ -5,6 +5,7 @@ import (
 
 	"github.com/kaneshin/kamimai/core"
 	"github.com/kaneshin/kamimai/internal/cast"
+	"github.com/kaneshin/kamimai/internal/direction"
 )
 
 var (
@@ -34,6 +35,10 @@ func doDownCmd(cmd *Cmd, args ...string) error {
 		WithDriver(driver)
 
 	return driver.Transaction(func(tx *sql.Tx) error {
+
+		if version != 0 {
+			return svc.Apply(direction.Down, version)
+		}
 
 		if len(args) == 0 {
 			// Just one

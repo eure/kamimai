@@ -173,6 +173,16 @@ func (s *Service) step(n int) error {
 	return nil
 }
 
+// Apply applies the given migration version.
+func (s *Service) Apply(d int, version uint64) error {
+	s.direction = d
+	s.apply()
+
+	// gets current index of migrations
+	idx := s.data.index(Migration{version: version})
+	return s.do(idx)
+}
+
 func (s *Service) up(n int) error {
 	s.direction = direction.Up
 	err := s.step(n)

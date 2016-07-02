@@ -1,10 +1,6 @@
 package main
 
-import (
-	"database/sql"
-
-	"github.com/eure/kamimai/core"
-)
+import "github.com/eure/kamimai"
 
 var (
 	syncCmd = &Cmd{
@@ -16,24 +12,6 @@ var (
 
 func doSyncCmd(cmd *Cmd, args ...string) error {
 
-	// driver
-	driver := core.GetDriver(config.Driver())
-	if err := driver.Open(config.Dsn()); err != nil {
-		return err
-	}
-
-	current, err := driver.Version().Current()
-	if err != nil {
-		return err
-	}
-
-	// generate a service
-	svc := core.NewService(config).
-		WithVersion(current).
-		WithDriver(driver)
-
-	return driver.Transaction(func(tx *sql.Tx) error {
-		// Sync all migrations
-		return svc.Sync()
-	})
+	// Sync all migrations
+	return kamimai.Sync(config)
 }

@@ -23,4 +23,4 @@ test:
 	@go test $(KAMIMAI_ONLY_PKGS)
 
 
-.PHONY: all ansible lint vet
+.PHONY: all ansible unit lint vet test

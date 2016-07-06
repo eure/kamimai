@@ -1,14 +1,15 @@
 package driver
 
 import (
+	"bytes"
 	"database/sql"
 	"errors"
 	"fmt"
 	"strings"
 	"sync"
 
-	"github.com/go-sql-driver/mysql"
 	"github.com/eure/kamimai/core"
+	"github.com/go-sql-driver/mysql"
 )
 
 type (
@@ -108,10 +109,19 @@ func (d *MySQL) Migrate(m *core.Migration) error {
 	if err != nil {
 		return err
 	}
-	_, err = d.Exec(string(b))
-	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
-		return err
+
+	stmts := bytes.Split(b, []byte(";"))
+	for _, stmt := range stmts {
+		query := strings.TrimSpace(string(stmt))
+		if len(query) == 0 {
+			continue
+		}
+		_, err = d.Exec(query)
+		if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
+			return err
+		}
 	}
+
 	return nil
 }
 

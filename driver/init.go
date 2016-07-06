@@ -1,7 +1,7 @@
 package driver
 
 import (
-	"github.com/kaneshin/kamimai/core"
+	"github.com/eure/kamimai/core"
 )
 
 const versionTableName = "schema_version"

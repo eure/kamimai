@@ -3,7 +3,7 @@ package driver
 import (
 	"testing"
 
-	"github.com/kaneshin/kamimai/core"
+	"github.com/eure/kamimai/core"
 	"github.com/stretchr/testify/assert"
 )
 

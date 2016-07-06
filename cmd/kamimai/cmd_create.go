@@ -4,7 +4,7 @@ import (
 	"log"
 	"os"
 
-	"github.com/kaneshin/kamimai/core"
+	"github.com/eure/kamimai/core"
 )
 
 var (

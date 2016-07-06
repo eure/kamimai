@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/kaneshin/kamimai/core"
+	"github.com/eure/kamimai/core"
 )
 
 type (

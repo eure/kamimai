@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/kaneshin/kamimai/internal/cast"
+	"github.com/eure/kamimai/internal/cast"
 )
 
 type (

@@ -7,8 +7,8 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/kaneshin/kamimai/core"
-	_ "github.com/kaneshin/kamimai/driver"
+	"github.com/eure/kamimai/core"
+	_ "github.com/eure/kamimai/driver"
 )
 
 var (

@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 
-	"github.com/kaneshin/kamimai/core"
+	"github.com/eure/kamimai/core"
 )
 
 var (

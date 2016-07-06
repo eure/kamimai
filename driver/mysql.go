@@ -8,7 +8,7 @@ import (
 	"sync"
 
 	"github.com/go-sql-driver/mysql"
-	"github.com/kaneshin/kamimai/core"
+	"github.com/eure/kamimai/core"
 )
 
 type (

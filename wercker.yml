@@ -25,7 +25,7 @@ build:
         name: go get
         code: |
           cd $WERCKER_SOURCE_DIR
-          go get -d github.com/kaneshin/kamimai || true
+          go get -d github.com/eure/kamimai || true
           go get -d github.com/go-sql-driver/mysql
           go get -d github.com/BurntSushi/toml
           go get -d gopkg.in/yaml.v2
@@ -36,7 +36,7 @@ build:
     - script:
         name: go build
         code: |
-          go build github.com/kaneshin/kamimai/...
+          go build github.com/eure/kamimai/...
 
     # test the package
     - script:
@@ -44,4 +44,4 @@ build:
         code: |
           make lint
           make vet
-          go test -v github.com/kaneshin/kamimai/...
+          go test -v github.com/eure/kamimai/...

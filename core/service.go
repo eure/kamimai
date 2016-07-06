@@ -249,7 +249,7 @@ func (s *Service) NextMigration(name string) (up *Migration, down *Migration, er
 
 	// initialize default variables for making migrations.
 	up, down = &Migration{version: 1, name: ""}, &Migration{version: 1, name: ""}
-	ver := "001"
+	verFormat := "%03d"
 
 	// gets the oldest migration version file.
 	if obj := s.data.last(); obj != nil {
@@ -260,7 +260,7 @@ func (s *Service) NextMigration(name string) (up *Migration, down *Migration, er
 	if obj := s.data.first(); obj != nil {
 		// for version format
 		_, file := filepath.Split(obj.name)
-		ver = version.Format(file)
+		verFormat = version.Format(file)
 
 		if _, err := time.Parse("20060102150405", version.Get(file)); err == nil {
 			v := cast.Uint64(time.Now())
@@ -270,7 +270,7 @@ func (s *Service) NextMigration(name string) (up *Migration, down *Migration, er
 	}
 
 	// [ver]_[name]_[direction-suffix][.ext]
-	base := fmt.Sprintf("%s_%s_%%s%%s", ver, name)
+	base := fmt.Sprintf("%s_%s_%%s%%s", verFormat, name)
 	// including dot
 	ext := s.driver.Ext()
 

@@ -63,7 +63,24 @@ kamimai -path=./example/mysql -env=test1 sync
 
 ## Usage in Go code 
 
-_T.B.D._
+```go
+package main
+
+import (
+	"github.com/eure/kamimai"
+	"github.com/eure/kamimai/core"
+	_ "github.com/eure/kamimai/driver"
+)
+
+func main() {
+	conf, err := core.NewConfig("examples/testdata").
+		WithEnv("development")
+
+	// Sync
+	kamimai.Sync(conf)
+
+	// ...
+```
 
 ## Drivers
 

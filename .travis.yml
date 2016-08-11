@@ -1,0 +1,30 @@
+language: go
+go:
+  - 1.5.4
+  - 1.6.3
+  - 1.7rc6
+  - tip
+sudo: false
+services:
+  - mysql
+env:
+  global:
+    - GO15VENDOREXPERIMENT=1
+    - MYSQL_USER=root
+    - MYSQL_PASSWORD=
+    - MYSQL_HOST=127.0.0.1
+    - MYSQL_PORT=3306
+    - MYSQL_DATABASE=kamimai
+install:
+  - go get -d github.com/BurntSushi/toml
+  - go get -d github.com/go-sql-driver/mysql
+  - go get -d github.com/stretchr/testify/assert
+  - go get -d gopkg.in/yaml.v2
+  - go get -u github.com/golang/lint/golint
+before_install:
+  - mysql -e "CREATE DATABASE IF NOT EXISTS kamimai;" -uroot
+  - go env && pwd
+script:
+  - make lint
+  - make vet
+  - make test

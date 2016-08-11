@@ -1,4 +1,0 @@
----
-development:
-  driver: mysql
-  dsn: mysql://test_user:test_password@tcp($MYSQL_PORT_3306_TCP_ADDR:$MYSQL_PORT_3306_TCP_PORT)/kamimai?charset=utf8

@@ -1,8 +1,8 @@
 [development]
 driver = "mysql"
-dsn = "mysql://test_user:test_password@tcp($MYSQL_PORT_3306_TCP_ADDR:$MYSQL_PORT_3306_TCP_PORT)/kamimai?charset=utf8"
+dsn = "mysql://$MYSQL_USER:$MYSQL_PASSWORD@tcp($MYSQL_HOST:$MYSQL_PORT)/$MYSQL_DATABASE?charset=utf8"
 
 [test]
 driver = "mysql"
-dsn = "mysql://test_user:test_password@tcp($MYSQL_PORT_3306_TCP_ADDR:$MYSQL_PORT_3306_TCP_PORT)/kamimai?charset=utf8"
+dsn = "mysql://$MYSQL_USER:$MYSQL_PASSWORD@tcp($MYSQL_HOST:$MYSQL_PORT)/$MYSQL_DATABASE?charset=utf8"
 directory = "test"

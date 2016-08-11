@@ -20,8 +20,6 @@ func (d *drv) Version() Version                        { return nil }
 func TestRegisterDriver(t *testing.T) {
 	assert := assert.New(t)
 
-	assert.NotNil(registry)
-
 	assert.Panics(func() {
 		RegisterDriver("nil", (Driver)(nil))
 	})

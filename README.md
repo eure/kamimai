@@ -3,7 +3,7 @@
 A migration manager written in Golang. Use it in run commands via the CLI.
 
 [![GoDoc](https://godoc.org/github.com/eure/kamimai?status.svg)](https://godoc.org/github.com/eure/kamimai)
-[![wercker status](https://app.wercker.com/status/14ef1b50d66855fbe9c5f17e6e60edd8/s/master "wercker status")](https://app.wercker.com/project/bykey/14ef1b50d66855fbe9c5f17e6e60edd8)
+[![Build Status](https://travis-ci.org/eure/kamimai.svg?branch=master)](https://travis-ci.org/eure/kamimai)
 
 ## Installation
 

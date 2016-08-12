@@ -1,3 +1,7 @@
+[develop]
+driver = "postgres"
+dsn = "postgres:user=$POSTGRES_USER dbname=hogedb password=$POSTGRES_PASSWORD sslmode=disable"
+
 [test1]
 driver = "postgres"
 dsn = "postgres:user=$POSTGRES_USER dbname=hogedb password=$POSTGRES_PASSWORD sslmode=disable"

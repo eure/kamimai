@@ -19,7 +19,7 @@ var (
 func doCreateCmd(cmd *Cmd, args ...string) error {
 	// arguments validation
 	if len(args) < 1 {
-		return errors.New("no file name specified.")
+		return errors.New("no file name specified")
 	}
 
 	// driver

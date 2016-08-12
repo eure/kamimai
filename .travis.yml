@@ -23,6 +23,13 @@ env:
     - MYSQL_HOST=127.0.0.1
     - MYSQL_PORT=3306
     - MYSQL_DATABASE=kamimai
+install:
+  - go get -d github.com/BurntSushi/toml
+  - go get -d github.com/go-sql-driver/mysql
+  - go get -d github.com/lib/pq
+  - go get -d github.com/stretchr/testify/assert
+  - go get -d gopkg.in/yaml.v2
+  - go get -u github.com/golang/lint/golint
 before_install:
   - mysql -e "CREATE DATABASE IF NOT EXISTS kamimai;" -uroot
   - make init

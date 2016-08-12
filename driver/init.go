@@ -7,6 +7,6 @@ import (
 const versionTableName = "schema_version"
 
 func init() {
-	// core.RegisterDriver("mysql", &MySQL{})
+	core.RegisterDriver("mysql", &MySQL{})
 	core.RegisterDriver("postgres", &Postgres{})
 }

@@ -1,0 +1,8 @@
+[test1]
+driver = "postgres"
+dsn = "postgres:user=$POSTGRES_USER dbname=hogedb password=$POSTGRES_PASSWORD sslmode=disable"
+directory = "test1"
+
+#[develop]
+#dsn = "postgres:user=$POSTGRES_USER dbname=hogedb password=$POSTGRES_PASSWORD sslmode=verify-full"
+# dsn = "postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@$POSTGRES_HOST:$POSTGRES_PORT/?sslmode=disable"

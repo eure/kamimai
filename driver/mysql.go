@@ -110,19 +110,28 @@ func (d *MySQL) Migrate(m *core.Migration) error {
 		return err
 	}
 
+	var list []string
 	stmts := bytes.Split(b, []byte(";"))
 	for _, stmt := range stmts {
-		query := strings.TrimSpace(string(stmt))
-		if len(query) == 0 {
-			continue
+		list = append(list, string(stmt))
+		var query string
+		if len(list) == 1 {
+			query = strings.TrimSpace(list[0])
+			if len(query) == 0 {
+				continue
+			}
+		} else {
+			query = strings.TrimSpace(strings.Join(list, ";"))
 		}
 		_, err = d.Exec(query)
 		if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
-			return err
+			continue
+		} else {
+			list = nil
 		}
 	}
 
-	return nil
+	return err
 }
 
 // Insert inserts the given migration version.

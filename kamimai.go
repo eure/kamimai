@@ -6,6 +6,8 @@ import (
 	"github.com/eure/kamimai/core"
 )
 
+const version = "v0.1.0"
+
 // Current returns the current migration version.
 func Current(c *core.Config) (uint64, error) {
 

@@ -1,6 +1,8 @@
 package driver
 
 import (
+	"database/sql"
+	"errors"
 	"testing"
 
 	"github.com/eure/kamimai/core"
@@ -17,6 +19,14 @@ func testDriver(t *testing.T, h harness) {
 
 	if assert.NoError(h.driver.Open(h.dsn)) {
 		testVersion(t, h.driver.Version())
+
+		assert.NoError(h.driver.Transaction(func(tx *sql.Tx) error {
+			return nil
+		}))
+
+		assert.Error(h.driver.Transaction(func(tx *sql.Tx) error {
+			return errors.New("Error")
+		}))
 
 		assert.NoError(h.driver.Close())
 	}
@@ -81,4 +91,6 @@ func TestMySQLDriver(t *testing.T) {
 		conf.WithEnv("development")
 		testDriver(t, harness{driver, conf.Dsn()})
 	}
+
+	assert.Equal(".sql", driver.Ext())
 }

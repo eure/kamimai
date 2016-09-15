@@ -73,9 +73,13 @@ import (
 )
 
 func main() {
-	conf, err := core.NewConfig("examples/testdata").
-		WithEnv("development")
-
+	conf, err := core.NewConfig("examples/testdata")
+	if err != nil {
+		panic(err)
+	}
+	
+	conf.WithEnv("development")
+	
 	// Sync
 	kamimai.Sync(conf)
 

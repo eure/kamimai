@@ -7,6 +7,7 @@ import (
 	"os"
 	"text/template"
 
+	"github.com/eure/kamimai"
 	"github.com/eure/kamimai/core"
 	_ "github.com/eure/kamimai/driver"
 )
@@ -74,7 +75,7 @@ func usage() {
 		"name":        "kamimai",
 		"description": "kamimai is a database migration management system.",
 		"usage":       "kamimai [global options] command [command options] [arguments...]",
-		"version":     "0.0.1",
+		"version":     kamimai.Version,
 		"author":      "kaneshin <kaneshin0120@gmail.com>",
 	}
 

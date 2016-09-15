@@ -9,7 +9,7 @@ HAVE_GOLINT:=$(shell which golint)
 HAVE_GOCYCLO:=$(shell which gocyclo)
 HAVE_GOCOV:=$(shell which gocov)
 GLIDE_VERSION='v0.12.2'
-VERSION=$(patsubst "%",%,$(lastword $(shell grep 'const version' kamimai.go)))
+VERSION=$(patsubst "%",%,$(lastword $(shell grep 'const Version' kamimai.go)))
 COMMITISH=$(shell git rev-parse HEAD)
 PROJECT_REPONAME=kamimai
 PROJECT_USERNAME=eure
@@ -20,6 +20,10 @@ ARTIFACTS_DIR=artifacts
 init: install-deps
 
 build: install-deps
+	go build -o /tmp/kamimai -ldflags="-s -w" github.com/$(PROJECT_USERNAME)/$(PROJECT_REPONAME)/cmd/kamimai
+
+install: install-deps
+	go install -ldflags="-s -w" github.com/$(PROJECT_USERNAME)/$(PROJECT_REPONAME)/cmd/kamimai
 
 unit: lint vet cyclo build test
 unit-report: lint vet cyclo build test-report
@@ -36,8 +40,11 @@ vet:
 	@go tool vet -all -structtags -shadow $(shell ls -d */ | grep -v "misc" | grep -v "vendor")
 
 cyclo: gocyclo
-	@echo "gocyclo -over 30"
-	@gocyclo -over 30 ./core
+	@echo "gocyclo -over 20"
+	@cyclo=`gocyclo -over 20 .`; \
+	cyclo=`echo "$$cyclo" | grep -E -v -e vendor/`; \
+	echo "$$cyclo"; \
+	if [ "$$cyclo" != "" ]; then exit 1; fi
 
 test:
 	@go test $(TARGET_ONLY_PKGS)
@@ -101,7 +108,7 @@ verify-github-token:
 
 gox-build: gox
 	@mkdir -p $(ARTIFACTS_DIR)/$(VERSION) && cd $(ARTIFACTS_DIR)/$(VERSION); \
-		gox -ldflags="-s -w" github.com/eure/kamimai/cmd/kamimai
+		gox -ldflags="-s -w" github.com/$(PROJECT_USERNAME)/$(PROJECT_REPONAME)/cmd/kamimai
 
 release: ghr verify-github-token gox-build
 	@ghr -c $(COMMITISH) -u $(PROJECT_USERNAME) -r $(PROJECT_REPONAME) -t $$GITHUB_TOKEN \

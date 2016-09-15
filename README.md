@@ -4,6 +4,7 @@ A migration manager written in Golang. Use it in run commands via the CLI.
 
 [![GoDoc](https://godoc.org/github.com/eure/kamimai?status.svg)](https://godoc.org/github.com/eure/kamimai)
 [![Build Status](https://travis-ci.org/eure/kamimai.svg?branch=master)](https://travis-ci.org/eure/kamimai)
+[![codecov](https://codecov.io/gh/eure/kamimai/branch/master/graph/badge.svg)](https://codecov.io/gh/eure/kamimai)
 
 ## Installation
 

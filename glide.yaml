@@ -3,6 +3,7 @@ import:
 - package: github.com/BurntSushi/toml
 - package: github.com/go-sql-driver/mysql
 - package: gopkg.in/yaml.v2
+- package: github.com/lib/pq
 testImport:
 - package: github.com/stretchr/testify
   subpackages:

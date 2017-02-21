@@ -1,3 +1,0 @@
----
-- name: install golint
-  shell: go get -u {{ golint_cmd_repository_path }}

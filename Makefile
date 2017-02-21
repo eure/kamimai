@@ -1,50 +1,60 @@
 GOVERSION=$(shell go version)
 GOOS=$(word 1,$(subst /, ,$(lastword $(GOVERSION))))
 GOARCH=$(word 2,$(subst /, ,$(lastword $(GOVERSION))))
-LINTIGNOREDEPS='vendor/.+\.go'
 TARGET_ONLY_PKGS=$(shell go list ./... 2> /dev/null | grep -v "/misc/" | grep -v "/vendor/")
-INTERNAL_BIN=.bin
-HAVE_GLIDE:=$(shell which glide)
+IGNORE_DEPS_GOLINT='vendor/.+\.go'
+IGNORE_DEPS_GOVET='vendor/.+\.go'
+IGNORE_DEPS_GOCYCLO='vendor/.+\.go'
 HAVE_GOLINT:=$(shell which golint)
 HAVE_GOCYCLO:=$(shell which gocyclo)
 HAVE_GOCOV:=$(shell which gocov)
-GLIDE_VERSION='v0.12.2'
-VERSION=$(patsubst "%",%,$(lastword $(shell grep 'const Version' kamimai.go)))
+HAVE_GHR:=$(shell which ghr)
+HAVE_GOX:=$(shell which gox)
+PROJECT_REPONAME=$(notdir $(abspath ./))
+PROJECT_USERNAME=$(notdir $(abspath ../))
+OBJS=$(notdir $(TARGETS))
+LDFLAGS=-ldflags="-s -w"
 COMMITISH=$(shell git rev-parse HEAD)
-PROJECT_REPONAME=kamimai
-PROJECT_USERNAME=eure
 ARTIFACTS_DIR=artifacts
+TARGETS=$(addprefix github.com/$(PROJECT_USERNAME)/$(PROJECT_REPONAME)/cmd/,kamimai)
+VERSION=$(patsubst "%",%,$(lastword $(shell grep 'const Version' kamimai.go)))
 
-.PHONY: all ansible unit lint vet test
+all: $(TARGETS)
 
-init: install-deps
+$(TARGETS):
+	@go install $(LDFLAGS) -v $@
 
-build: install-deps
-	go build -o /tmp/kamimai -ldflags="-s -w" github.com/$(PROJECT_USERNAME)/$(PROJECT_REPONAME)/cmd/kamimai
+.PHONY: build release
+build: gox
+	@mkdir -p $(ARTIFACTS_DIR)/$(VERSION) && cd $(ARTIFACTS_DIR)/$(VERSION); \
+		gox $(LDFLAGS) $(TARGETS)
 
-install: install-deps
-	go install -ldflags="-s -w" github.com/$(PROJECT_USERNAME)/$(PROJECT_REPONAME)/cmd/kamimai
+release: ghr verify-github-token build
+	@ghr -c $(COMMITISH) -u $(PROJECT_USERNAME) -r $(PROJECT_REPONAME) -t $$GITHUB_TOKEN \
+		--replace $(VERSION) $(ARTIFACTS_DIR)/$(VERSION)
 
-unit: lint vet cyclo build test
-unit-report: lint vet cyclo build test-report
+.PHONY: unit unit-report
+unit: lint vet cyclo test
+unit-report: lint vet cyclo test-report
 
+.PHONY: lint vet cyclo test coverage test-report
 lint: golint
 	@echo "go lint"
 	@lint=`golint ./...`; \
-	lint=`echo "$$lint" | grep -E -v -e ${LINTIGNOREDEPS}`; \
-	echo "$$lint"; \
-	if [ "$$lint" != "" ]; then exit 1; fi
+		lint=`echo "$$lint" | grep -E -v -e ${IGNORE_DEPS_GOLINT}`; \
+		echo "$$lint"; if [ "$$lint" != "" ]; then exit 1; fi
 
 vet:
 	@echo "go vet"
-	@go tool vet -all -structtags -shadow $(shell ls -d */ | grep -v "misc" | grep -v "vendor")
+	@vet=`go tool vet -all -structtags -shadow $(shell ls -d */ | grep -v "vendor") 2>&1`; \
+		vet=`echo "$$vet" | grep -E -v -e ${IGNORE_DEPS_GOVET}`; \
+		echo "$$vet"; if [ "$$vet" != "" ]; then exit 1; fi
 
 cyclo: gocyclo
 	@echo "gocyclo -over 20"
-	@cyclo=`gocyclo -over 20 .`; \
-	cyclo=`echo "$$cyclo" | grep -E -v -e vendor/`; \
-	echo "$$cyclo"; \
-	if [ "$$cyclo" != "" ]; then exit 1; fi
+	@cyclo=`gocyclo -over 20 . 2>&1`; \
+		cyclo=`echo "$$cyclo" | grep -E -v -e ${IGNORE_DEPS_GOCYCLO}`; \
+		echo "$$cyclo"; if [ "$$cyclo" != "" ]; then exit 1; fi
 
 test:
 	@go test $(TARGET_ONLY_PKGS)
@@ -54,16 +64,16 @@ coverage: gocov
 
 test-report:
 	@echo "Invoking test and coverage"
-	@echo "" > coverage.txt; \
-	for d in $(TARGET_ONLY_PKGS); do \
+	@echo "" > coverage.txt
+	@for d in $(TARGET_ONLY_PKGS); do \
 		go test -coverprofile=profile.out -covermode=atomic $$d || exit 1; \
-		[ -f profile.out ] && cat profile.out >> coverage.txt && rm profile.out || true; \
-	done
+		[ -f profile.out ] && cat profile.out >> coverage.txt && rm profile.out || true; done
 
-install-deps: glide
-	@echo "Installing all dependencies"
-	@PATH=$(INTERNAL_BIN):$(PATH) glide i
+.PHONY: verify-github-token
+verify-github-token:
+	@if [ -z "$$GITHUB_TOKEN" ]; then echo '$$GITHUB_TOKEN is required'; exit 1; fi
 
+.PHONY: golint gocyclo gocov ghr gox
 golint:
 ifndef HAVE_GOLINT
 	@echo "Installing linter"
@@ -82,15 +92,6 @@ ifndef HAVE_GOCOV
 	@go get -u github.com/axw/gocov/gocov
 endif
 
-glide:
-ifndef HAVE_GLIDE
-	@echo "Installing glide"
-	@mkdir -p $(INTERNAL_BIN)
-	@wget -q -O - https://github.com/Masterminds/glide/releases/download/$(GLIDE_VERSION)/glide-$(GLIDE_VERSION)-$(GOOS)-$(GOARCH).tar.gz | tar xvz
-	@mv $(GOOS)-$(GOARCH)/glide $(INTERNAL_BIN)/glide
-	@rm -rf $(GOOS)-$(GOARCH)
-endif
-
 ghr:
 ifndef HAVE_GHR
 	@echo "Installing ghr to upload binaries for release page"
@@ -103,13 +104,3 @@ ifndef HAVE_GOX
 	@go get -u github.com/mitchellh/gox
 endif
 
-verify-github-token:
-	@if [ -z "$$GITHUB_TOKEN" ]; then echo '$$GITHUB_TOKEN is required'; exit 1; fi
-
-gox-build: gox
-	@mkdir -p $(ARTIFACTS_DIR)/$(VERSION) && cd $(ARTIFACTS_DIR)/$(VERSION); \
-		gox -ldflags="-s -w" github.com/$(PROJECT_USERNAME)/$(PROJECT_REPONAME)/cmd/kamimai
-
-release: ghr verify-github-token gox-build
-	@ghr -c $(COMMITISH) -u $(PROJECT_USERNAME) -r $(PROJECT_REPONAME) -t $$GITHUB_TOKEN \
-		--replace $(VERSION) $(ARTIFACTS_DIR)/$(VERSION)

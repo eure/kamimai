@@ -102,10 +102,4 @@ func main() {
 
 ## License
 
-[The MIT License (MIT)](http://kaneshin.mit-license.org/)
-
-
-## Author
-
-Shintaro Kaneko <kaneshin0120@gmail.com>
-
+[The MIT License (MIT)](https://github.com/eure/kamimai/blob/master/LICENSE)

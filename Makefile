@@ -24,7 +24,7 @@ all: $(TARGETS)
 $(TARGETS):
 	@go install $(LDFLAGS) -v $@
 
-.PHONY: build release
+.PHONY: build release clean
 build: gox
 	@mkdir -p $(ARTIFACTS_DIR)/$(VERSION) && cd $(ARTIFACTS_DIR)/$(VERSION); \
 		gox $(LDFLAGS) $(TARGETS)
@@ -32,6 +32,9 @@ build: gox
 release: ghr verify-github-token build
 	@ghr -c $(COMMITISH) -u $(PROJECT_USERNAME) -r $(PROJECT_REPONAME) -t $$GITHUB_TOKEN \
 		--replace $(VERSION) $(ARTIFACTS_DIR)/$(VERSION)
+
+clean:
+	$(RM) -r $(ARTIFACTS_DIR)
 
 .PHONY: unit unit-report
 unit: lint vet cyclo test

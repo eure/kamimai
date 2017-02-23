@@ -1,7 +1,7 @@
 GOVERSION=$(shell go version)
 GOOS=$(word 1,$(subst /, ,$(lastword $(GOVERSION))))
 GOARCH=$(word 2,$(subst /, ,$(lastword $(GOVERSION))))
-TARGET_ONLY_PKGS=$(shell go list ./... 2> /dev/null | grep -v "/misc/" | grep -v "/vendor/")
+TARGET_ONLY_PKGS=$(shell go list ./... 2> /dev/null | grep -v "/vendor/")
 IGNORE_DEPS_GOLINT='vendor/.+\.go'
 IGNORE_DEPS_GOVET='vendor/.+\.go'
 IGNORE_DEPS_GOCYCLO='vendor/.+\.go'

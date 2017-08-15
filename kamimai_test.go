@@ -3,8 +3,8 @@ package kamimai
 import (
 	"testing"
 
-	"github.com/eure/kamimai/core"
-	_ "github.com/eure/kamimai/driver"
+	"github.com/Fs02/kamimai/core"
+	_ "github.com/Fs02/kamimai/driver"
 	"github.com/stretchr/testify/assert"
 )
 

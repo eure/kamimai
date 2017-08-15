@@ -7,9 +7,9 @@ import (
 	"os"
 	"text/template"
 
-	"github.com/eure/kamimai"
-	"github.com/eure/kamimai/core"
-	_ "github.com/eure/kamimai/driver"
+	"github.com/Fs02/kamimai"
+	"github.com/Fs02/kamimai/core"
+	_ "github.com/Fs02/kamimai/driver"
 )
 
 var (
@@ -21,10 +21,13 @@ var (
 		// migrateCmd,
 	}
 
-	help    = flag.String("help", "", "show help")
-	dirPath = flag.String("path", "", "migration dir containing config")
-	env     = flag.String("env", "", "config environment to use")
-	dryRun  = flag.Bool("dry-run", false, "")
+	help      = flag.String("help", "", "show help")
+	dirPath   = flag.String("path", "", "migration dir containing config")
+	env       = flag.String("env", "", "config environment to use")
+	dryRun    = flag.Bool("dry-run", false, "")
+	driver    = flag.String("driver", "", "database driver to use")
+	dsn       = flag.String("dsn", "", "raw dsn string")
+	directory = flag.String("directory", "", "directory containing migration scripts")
 
 	config *core.Config
 )

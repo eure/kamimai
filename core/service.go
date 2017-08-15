@@ -9,9 +9,9 @@ import (
 	"sort"
 	"time"
 
-	"github.com/eure/kamimai/internal/cast"
-	"github.com/eure/kamimai/internal/direction"
-	"github.com/eure/kamimai/internal/version"
+	"github.com/Fs02/kamimai/internal/cast"
+	"github.com/Fs02/kamimai/internal/direction"
+	"github.com/Fs02/kamimai/internal/version"
 )
 
 const (

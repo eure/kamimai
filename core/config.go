@@ -13,12 +13,12 @@ import (
 type (
 	// Config object.
 	Config struct {
-		data map[string]internal
+		Data map[string]Internal
 		env  string
 		dir  string
 	}
 
-	internal struct {
+	Internal struct {
 		Driver    string `yaml:"driver"`
 		Dsn       string `yaml:"dsn"`
 		Directory string `yaml:"directory"`
@@ -51,12 +51,12 @@ func NewConfig(dir string) (*Config, error) {
 			if err != nil {
 				return nil, err
 			}
-			if err := yaml.Unmarshal(b, &conf.data); err != nil {
+			if err := yaml.Unmarshal(b, &conf.Data); err != nil {
 				return nil, err
 			}
 
 		case ".tml", ".toml":
-			if _, err := toml.DecodeFile(fpath, &conf.data); err != nil {
+			if _, err := toml.DecodeFile(fpath, &conf.Data); err != nil {
 				return nil, err
 			}
 		}
@@ -67,15 +67,15 @@ func NewConfig(dir string) (*Config, error) {
 
 // MergeConfig returns merged config.
 func MergeConfig(c ...*Config) *Config {
-	conf := Config{data: map[string]internal{}}
+	conf := Config{Data: map[string]Internal{}}
 	for _, v := range c {
 		if conf.env == "" && v.env != "" {
 			conf.env = v.env
 		}
 
-		for key, vv := range v.data {
-			if _, ok := conf.data[key]; !ok {
-				conf.data[key] = vv
+		for key, vv := range v.Data {
+			if _, ok := conf.Data[key]; !ok {
+				conf.Data[key] = vv
 			}
 		}
 	}
@@ -95,7 +95,7 @@ func (c Config) Dir() string {
 
 // Driver returns a raw driver string.
 func (c Config) Driver() string {
-	if d, ok := c.data[c.env]; ok {
+	if d, ok := c.Data[c.env]; ok {
 		return d.Driver
 	}
 	return ""
@@ -103,14 +103,14 @@ func (c Config) Driver() string {
 
 // Dsn returns a raw dsn string.
 func (c Config) Dsn() string {
-	if d, ok := c.data[c.env]; ok {
+	if d, ok := c.Data[c.env]; ok {
 		return os.ExpandEnv(d.Dsn)
 	}
 	return ""
 }
 
 func (c Config) migrationsDir() string {
-	if d, ok := c.data[c.env]; ok {
+	if d, ok := c.Data[c.env]; ok {
 		if d.Directory == "" {
 			d.Directory = "migrations"
 		}

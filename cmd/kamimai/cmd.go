@@ -3,7 +3,7 @@ package main
 import (
 	"flag"
 
-	"github.com/eure/kamimai/core"
+	"github.com/Fs02/kamimai/core"
 )
 
 type (
@@ -27,6 +27,18 @@ func (c *Cmd) Exec(args []string) error {
 	c.flag.Parse(args)
 
 	// Load config
-	config = core.MustNewConfig(*dirPath).WithEnv(*env)
+	if driver != nil {
+		config = &core.Config{
+			Data: make(map[string]core.Internal),
+		}
+		config.Data[""] = core.Internal{
+			Driver:    *driver,
+			Dsn:       *dsn,
+			Directory: *directory,
+		}
+	} else {
+		config = core.MustNewConfig(*dirPath).WithEnv(*env)
+	}
+
 	return c.Run(c, c.flag.Args()...)
 }

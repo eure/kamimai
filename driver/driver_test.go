@@ -5,7 +5,7 @@ import (
 	"errors"
 	"testing"
 
-	"github.com/eure/kamimai/core"
+	"github.com/Fs02/kamimai/core"
 	"github.com/stretchr/testify/assert"
 )
 

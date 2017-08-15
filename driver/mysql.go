@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/eure/kamimai/core"
+	"github.com/Fs02/kamimai/core"
 	"github.com/go-sql-driver/mysql"
 )
 

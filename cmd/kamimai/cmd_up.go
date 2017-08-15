@@ -3,9 +3,9 @@ package main
 import (
 	"database/sql"
 
-	"github.com/eure/kamimai/core"
-	"github.com/eure/kamimai/internal/cast"
-	"github.com/eure/kamimai/internal/direction"
+	"github.com/Fs02/kamimai/core"
+	"github.com/Fs02/kamimai/internal/cast"
+	"github.com/Fs02/kamimai/internal/direction"
 )
 
 var (

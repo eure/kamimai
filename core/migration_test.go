@@ -8,17 +8,17 @@ import (
 )
 
 func TestMigration(t *testing.T) {
-	assert := assert.New(t)
+	asrt := assert.New(t)
 
 	mig := NewMigration().WithVersion(123)
-	assert.EqualValues(123, mig.version)
+	asrt.EqualValues(123, mig.version)
 
 	mig.WithVersion(101)
-	assert.EqualValues(101, mig.version)
+	asrt.EqualValues(101, mig.version)
 }
 
 func TestSortMigrations(t *testing.T) {
-	assert := assert.New(t)
+	asrt := assert.New(t)
 
 	migs := (Migrations)([]*Migration{
 		NewMigration().WithVersion(123),
@@ -30,16 +30,16 @@ func TestSortMigrations(t *testing.T) {
 	})
 
 	sort.Sort(migs)
-	assert.EqualValues(12, migs[0].version)
-	assert.EqualValues(123, migs[1].version)
-	assert.EqualValues(184, migs[2].version)
-	assert.EqualValues(383, migs[3].version)
-	assert.EqualValues(971, migs[4].version)
-	assert.EqualValues(1023, migs[5].version)
+	asrt.EqualValues(12, migs[0].version)
+	asrt.EqualValues(123, migs[1].version)
+	asrt.EqualValues(184, migs[2].version)
+	asrt.EqualValues(383, migs[3].version)
+	asrt.EqualValues(971, migs[4].version)
+	asrt.EqualValues(1023, migs[5].version)
 }
 
 func TestMigrationsIndex(t *testing.T) {
-	assert := assert.New(t)
+	asrt := assert.New(t)
 
 	migs := (Migrations)([]*Migration{
 		NewMigration().WithVersion(123),
@@ -49,13 +49,13 @@ func TestMigrationsIndex(t *testing.T) {
 		NewMigration().WithVersion(971),
 		NewMigration().WithVersion(184),
 	})
-	assert.EqualValues(notFoundIndex, migs.index(Migration{version: 1000000}))
+	asrt.EqualValues(notFoundIndex, migs.index(Migration{version: 1000000}))
 
-	assert.Equal(1, migs.index(Migration{version: 12}))
-	assert.Equal(2, migs.index(Migration{version: 1023}))
+	asrt.Equal(1, migs.index(Migration{version: 12}))
+	asrt.Equal(2, migs.index(Migration{version: 1023}))
 
 	sort.Sort(migs)
 
-	assert.Equal(0, migs.index(Migration{version: 12}))
-	assert.Equal(5, migs.index(Migration{version: 1023}))
+	asrt.Equal(0, migs.index(Migration{version: 12}))
+	asrt.Equal(5, migs.index(Migration{version: 1023}))
 }

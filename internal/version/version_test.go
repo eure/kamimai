@@ -7,7 +7,7 @@ import (
 )
 
 func TestGet(t *testing.T) {
-	assert := assert.New(t)
+	asrt := assert.New(t)
 
 	candidates := []struct {
 		value    string
@@ -25,7 +25,7 @@ func TestGet(t *testing.T) {
 	}
 
 	for _, c := range candidates {
-		assert.EqualValues(c.expected, Get(c.value), c.message)
+		asrt.EqualValues(c.expected, Get(c.value), c.message)
 	}
 }
 
@@ -36,7 +36,7 @@ func BenchmarkGet(b *testing.B) {
 }
 
 func TestFormat(t *testing.T) {
-	assert := assert.New(t)
+	asrt := assert.New(t)
 
 	candidates := []struct {
 		value    string
@@ -54,7 +54,7 @@ func TestFormat(t *testing.T) {
 	}
 
 	for _, c := range candidates {
-		assert.EqualValues(c.expected, Format(c.value), c.message)
+		asrt.EqualValues(c.expected, Format(c.value), c.message)
 	}
 }
 

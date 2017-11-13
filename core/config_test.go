@@ -25,7 +25,7 @@ func testMustNewConfig(t *testing.T) *Config {
 }
 
 func TestNewConfig(t *testing.T) {
-	assert := assert.New(t)
+	asrt := assert.New(t)
 
 	var (
 		conf *Config
@@ -33,28 +33,28 @@ func TestNewConfig(t *testing.T) {
 	)
 
 	conf, err = NewConfig("")
-	assert.Nil(conf)
-	assert.Error(err)
+	asrt.Nil(conf)
+	asrt.Error(err)
 
-	assert.Equal("", Config{}.Driver())
-	assert.Equal("", Config{}.Dsn())
-	assert.Equal("", Config{}.migrationsDir())
+	asrt.Equal("", Config{}.Driver())
+	asrt.Equal("", Config{}.Dsn())
+	asrt.Equal("", Config{}.migrationsDir())
 
 	conf, err = NewConfig("../examples/testdata")
-	assert.NotNil(conf)
+	asrt.NotNil(conf)
 
 	conf.WithEnv("development")
-	if assert.NoError(err) {
-		assert.Equal("mysql", conf.Driver())
-		assert.Equal("mysql://testuser:testpassword@tcp(:)/kamimai?charset=utf8", conf.Dsn())
-		assert.Equal("../examples/testdata/migrations", conf.migrationsDir())
+	if asrt.NoError(err) {
+		asrt.Equal("mysql", conf.Driver())
+		asrt.Equal("mysql://testuser:testpassword@tcp(:)/kamimai?charset=utf8", conf.Dsn())
+		asrt.Equal("../examples/testdata/migrations", conf.migrationsDir())
 	}
 
 	conf.WithEnv("test")
-	if assert.NoError(err) {
-		assert.Equal("mysql", conf.Driver())
-		assert.Equal("mysql://testuser:testpassword@tcp(:)/kamimai?charset=utf8", conf.Dsn())
-		assert.Equal("../examples/testdata/test", conf.migrationsDir())
+	if asrt.NoError(err) {
+		asrt.Equal("mysql", conf.Driver())
+		asrt.Equal("mysql://testuser:testpassword@tcp(:)/kamimai?charset=utf8", conf.Dsn())
+		asrt.Equal("../examples/testdata/test", conf.migrationsDir())
 	}
 
 	var (
@@ -64,25 +64,25 @@ func TestNewConfig(t *testing.T) {
 
 	confMySQL, err = NewConfig("../examples/mysql")
 	confMySQL.WithEnv("development")
-	if assert.NoError(err) {
-		assert.Equal("mysql", confMySQL.Driver())
+	if asrt.NoError(err) {
+		asrt.Equal("mysql", confMySQL.Driver())
 	}
 
 	confSQLite, err = NewConfig("../examples/sqlite3")
 	confSQLite.WithEnv("development")
-	if assert.NoError(err) {
-		assert.Equal("sqlite3", confSQLite.Driver())
+	if asrt.NoError(err) {
+		asrt.Equal("sqlite3", confSQLite.Driver())
 	}
 
 	conf = MergeConfig(confMySQL, confSQLite)
 	conf.WithEnv("development")
-	if assert.NoError(err) {
-		assert.Equal("mysql", conf.Driver())
+	if asrt.NoError(err) {
+		asrt.Equal("mysql", conf.Driver())
 	}
 
 	conf = MergeConfig(confSQLite, confMySQL)
 	conf.WithEnv("development")
-	if assert.NoError(err) {
-		assert.Equal("sqlite3", conf.Driver())
+	if asrt.NoError(err) {
+		asrt.Equal("sqlite3", conf.Driver())
 	}
 }

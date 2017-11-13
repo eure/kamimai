@@ -7,7 +7,7 @@ import (
 )
 
 func TestSuffix(t *testing.T) {
-	assert := assert.New(t)
+	asrt := assert.New(t)
 
 	candidates := []struct {
 		value    int
@@ -20,12 +20,12 @@ func TestSuffix(t *testing.T) {
 	}
 
 	for _, c := range candidates {
-		assert.Equal(c.expected, Suffix(c.value), c.message)
+		asrt.Equal(c.expected, Suffix(c.value), c.message)
 	}
 }
 
 func TestGet(t *testing.T) {
-	assert := assert.New(t)
+	asrt := assert.New(t)
 
 	candidates := []struct {
 		value    string
@@ -42,7 +42,7 @@ func TestGet(t *testing.T) {
 	}
 
 	for _, c := range candidates {
-		assert.EqualValues(c.expected, Get(c.value), c.message)
+		asrt.EqualValues(c.expected, Get(c.value), c.message)
 	}
 }
 

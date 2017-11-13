@@ -8,7 +8,7 @@ import (
 )
 
 func TestInt(t *testing.T) {
-	assert := assert.New(t)
+	asrt := assert.New(t)
 
 	str := "123"
 
@@ -39,12 +39,12 @@ func TestInt(t *testing.T) {
 	}
 
 	for _, c := range candidates {
-		assert.EqualValues(c.expected, Int(c.value), c.message)
+		asrt.EqualValues(c.expected, Int(c.value), c.message)
 	}
 }
 
 func TestUint64(t *testing.T) {
-	assert := assert.New(t)
+	asrt := assert.New(t)
 
 	str := "123"
 	now, _ := time.Parse("20060102150405", "20160622150000")
@@ -77,6 +77,6 @@ func TestUint64(t *testing.T) {
 	}
 
 	for _, c := range candidates {
-		assert.EqualValues(c.expected, Uint64(c.value), c.message)
+		asrt.EqualValues(c.expected, Uint64(c.value), c.message)
 	}
 }

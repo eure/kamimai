@@ -42,10 +42,7 @@ func doUpCmd(cmd *Cmd, args ...string) error {
 
 		if len(args) == 0 {
 			// All
-			if err := svc.Up(); err != nil {
-				return err
-			}
-			return nil
+			return svc.Up()
 		}
 
 		val := cast.Int(args[0])

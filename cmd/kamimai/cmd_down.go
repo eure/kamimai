@@ -42,10 +42,7 @@ func doDownCmd(cmd *Cmd, args ...string) error {
 
 		if len(args) == 0 {
 			// Just one
-			if err := svc.Prev(1); err != nil {
-				return err
-			}
-			return nil
+			return svc.Prev(1)
 		}
 
 		val := cast.Int(args[0])

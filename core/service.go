@@ -20,8 +20,8 @@ const (
 )
 
 var (
-	errOutOfBoundsMigrations = errors.New("out of bounds migration")
-	errDuplicateMigrations   = errors.New("duplicate migration file")
+	errOutOfBoundsMigrations     = errors.New("out of bounds migration")
+	errDuplicateMigrationVersion = errors.New("duplicate migration version")
 )
 
 type (
@@ -52,7 +52,7 @@ func (s Service) walker(indexPath map[uint64]*Migration) func(string, os.FileInf
 		ver := cast.Uint64(version.Get(name))
 		mig, found := indexPath[ver]
 		if found && mig.IsValid() {
-			return errors.Wrap(errDuplicateMigrations, fmt.Sprintf("failed to read migration %s", fullname))
+			return errors.Wrap(errDuplicateMigrationVersion, fmt.Sprintf("failed to read migration %s", fullname))
 		}
 
 		mig = &Migration{

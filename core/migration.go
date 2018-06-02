@@ -57,6 +57,14 @@ func (m Migration) Name() string {
 	return m.name
 }
 
+// IsValid reports whether the migration is valid.
+func (m *Migration) IsValid() bool {
+	if m == nil {
+		return false
+	}
+	return m.version > 0 && m.name != ""
+}
+
 //////////////////////////////
 // Migrations
 //////////////////////////////

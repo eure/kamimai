@@ -10,11 +10,17 @@ import (
 func TestMigration(t *testing.T) {
 	asrt := assert.New(t)
 
-	mig := NewMigration().WithVersion(123)
-	asrt.EqualValues(123, mig.version)
+	var mig *Migration
+	asrt.False(mig.IsValid())
 
+	mig = NewMigration().WithVersion(123)
+	asrt.EqualValues(123, mig.version)
 	mig.WithVersion(101)
 	asrt.EqualValues(101, mig.version)
+	asrt.False(mig.IsValid())
+
+	mig.name = "foo"
+	asrt.True(mig.IsValid())
 }
 
 func TestSortMigrations(t *testing.T) {

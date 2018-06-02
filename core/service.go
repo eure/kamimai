@@ -48,17 +48,18 @@ func (s Service) walker(indexPath map[uint64]*Migration) func(string, os.FileInf
 			return nil
 		}
 
+		fullname := filepath.Clean(filepath.Join(wd, path))
 		ver := cast.Uint64(version.Get(name))
 		mig, found := indexPath[ver]
 		if found && mig.IsValid() {
-			return errors.Wrap(errDuplicateMigrations, fmt.Sprintf("failed to read migration %s", version.Get(name)))
+			return errors.Wrap(errDuplicateMigrations, fmt.Sprintf("failed to read migration %s", fullname))
 		}
 
 		mig = &Migration{
 			version: ver,
 		}
 		indexPath[ver] = mig
-		mig.name = filepath.Clean(filepath.Join(wd, path))
+		mig.name = fullname
 
 		return nil
 	}

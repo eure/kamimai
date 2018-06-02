@@ -1,13 +1,14 @@
 package core
 
 import (
-	"errors"
 	"fmt"
 	"log"
 	"os"
 	"path/filepath"
 	"sort"
 	"time"
+
+	"github.com/pkg/errors"
 
 	"github.com/eure/kamimai/internal/cast"
 	"github.com/eure/kamimai/internal/direction"
@@ -20,6 +21,7 @@ const (
 
 var (
 	errOutOfBoundsMigrations = errors.New("out of bounds migration")
+	errDuplicateMigrations   = errors.New("duplicate migration file")
 )
 
 type (
@@ -33,7 +35,7 @@ type (
 	}
 )
 
-func (s Service) walker(indexPath map[uint64]*Migration) func(path string, info os.FileInfo, err error) error {
+func (s Service) walker(indexPath map[uint64]*Migration) func(string, os.FileInfo, error) error {
 	wd, _ := os.Getwd()
 
 	return func(path string, info os.FileInfo, err error) error {
@@ -42,20 +44,21 @@ func (s Service) walker(indexPath map[uint64]*Migration) func(path string, info 
 		}
 
 		name := info.Name()
-		ver := cast.Uint64(version.Get(name))
-		mig, found := indexPath[ver]
-		if !found || mig == nil {
-			mig = &Migration{
-				version: ver,
-			}
-			indexPath[ver] = mig
+		if s.direction != direction.Get(name) {
+			return nil
 		}
 
-		if s.direction == direction.Get(name) {
-			mig.name = filepath.Clean(filepath.Join(wd, path))
-		} else if s.direction == direction.Unknown {
-			mig.name = filepath.Clean(filepath.Join(wd, path))
+		ver := cast.Uint64(version.Get(name))
+		mig, found := indexPath[ver]
+		if found && mig.IsValid() {
+			return errors.Wrap(errDuplicateMigrations, fmt.Sprintf("failed to read migration %s", version.Get(name)))
 		}
+
+		mig = &Migration{
+			version: ver,
+		}
+		indexPath[ver] = mig
+		mig.name = filepath.Clean(filepath.Join(wd, path))
 
 		return nil
 	}
@@ -90,9 +93,17 @@ func (s *Service) MakeMigrationsDir() error {
 	return os.MkdirAll(s.config.migrationsDir(), 0777)
 }
 
-func (s *Service) apply() {
+func (s *Service) mustApply() {
+	if err := s.apply(); err != nil {
+		panic(err)
+	}
+}
+
+func (s *Service) apply() error {
 	index := map[uint64]*Migration{}
-	filepath.Walk(s.config.migrationsDir(), s.walker(index))
+	if err := filepath.Walk(s.config.migrationsDir(), s.walker(index)); err != nil {
+		return err
+	}
 
 	list := make([]*Migration, len(index))
 	i := 0
@@ -104,6 +115,7 @@ func (s *Service) apply() {
 	migs := Migrations(list)
 	sort.Sort(migs)
 	s.data = migs
+	return nil
 }
 
 func (s *Service) do(idx int) error {
@@ -136,7 +148,9 @@ func (s *Service) do(idx int) error {
 }
 
 func (s *Service) step(n int) error {
-	s.apply()
+	if err := s.apply(); err != nil {
+		return err
+	}
 
 	if s.version == 0 {
 		// init
@@ -176,7 +190,9 @@ func (s *Service) step(n int) error {
 // Apply applies the given migration version.
 func (s *Service) Apply(d int, version uint64) error {
 	s.direction = d
-	s.apply()
+	if err := s.apply(); err != nil {
+		return err
+	}
 
 	// gets current index of migrations
 	idx := s.data.index(Migration{version: version})
@@ -226,7 +242,9 @@ func (s *Service) Prev(n int) error {
 // Sync applies all migrations.
 func (s *Service) Sync() error {
 	s.direction = direction.Up
-	s.apply()
+	if err := s.apply(); err != nil {
+		return err
+	}
 
 	version := s.driver.Version()
 
@@ -245,7 +263,9 @@ func (s *Service) Sync() error {
 
 // NextMigration returns next version migrations.
 func (s *Service) NextMigration(name string) (up *Migration, down *Migration, err error) {
-	s.apply()
+	if err := s.apply(); err != nil {
+		return nil, nil, err
+	}
 
 	// initialize default variables for making migrations.
 	up, down = &Migration{version: 1, name: ""}, &Migration{version: 1, name: ""}

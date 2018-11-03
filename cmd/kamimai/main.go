@@ -10,6 +10,7 @@ import (
 	"github.com/eure/kamimai"
 	"github.com/eure/kamimai/core"
 	_ "github.com/eure/kamimai/driver"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 var (

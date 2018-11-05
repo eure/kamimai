@@ -5,6 +5,7 @@ import (
 
 	"github.com/eure/kamimai/core"
 	_ "github.com/eure/kamimai/driver"
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/stretchr/testify/assert"
 )
 

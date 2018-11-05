@@ -1,6 +1,6 @@
 language: go
 go:
-  - 1.9
+  - "1.10"
   - tip
 dist: trusty
 sudo: required
@@ -12,7 +12,7 @@ addons:
       - mysql-client-5.6
 env:
   global:
-    - GO15VENDOREXPERIMENT=1
+    - GO111MODULE=on
     - MYSQL_USER=root
     - MYSQL_PASSWORD=
     - MYSQL_HOST=127.0.0.1

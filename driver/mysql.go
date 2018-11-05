@@ -9,7 +9,6 @@ import (
 	"sync"
 
 	"github.com/eure/kamimai/core"
-	"github.com/go-sql-driver/mysql"
 )
 
 type (
@@ -124,7 +123,7 @@ func (d *MySQL) Migrate(m *core.Migration) error {
 			query = strings.TrimSpace(strings.Join(list, ";"))
 		}
 		_, err = d.Exec(query)
-		if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
+		if err != nil {
 			continue
 		} else {
 			list = nil
@@ -140,7 +139,7 @@ func (d *MySQL) Insert(val uint64) error {
 		versionTableName, val)
 
 	_, err := d.Exec(query)
-	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
+	if err != nil {
 		return err
 	}
 	return nil
@@ -152,7 +151,7 @@ func (d *MySQL) Delete(val uint64) error {
 		versionTableName, val)
 
 	_, err := d.Exec(query)
-	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
+	if err != nil {
 		return err
 	}
 	return nil
@@ -192,7 +191,7 @@ func (d *MySQL) Create() error {
 		versionTableName + ` (version BIGINT NOT NULL PRIMARY KEY);`
 
 	_, err := d.Exec(query)
-	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
+	if err != nil {
 		return err
 	}
 	return nil
@@ -203,7 +202,7 @@ func (d *MySQL) Drop() error {
 	const query = `DROP TABLE IF EXISTS ` + versionTableName
 
 	_, err := d.Exec(query)
-	if _, isWarn := err.(mysql.MySQLWarnings); err != nil && !isWarn {
+	if err != nil {
 		return err
 	}
 	return nil

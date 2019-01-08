@@ -6,7 +6,7 @@ import (
 
 	"github.com/stretchr/testify/assert"
 
-	"github.com/eure/kamimai/internal/direction"
+	"github.com/mr04vv/kamimai/internal/direction"
 )
 
 func TestService(t *testing.T) {

@@ -12,7 +12,7 @@ A migration manager written in Golang. Use it in run commands via the CLI.
 `kamimai` is written in Go, so if you have Go installed you can install it with go get:
 
 ```shell
-go get github.com/eure/kamimai/cmd/kamimai
+go get github.com/mr04vv/kamimai/cmd/kamimai
 ```
 
 Make sure that `kamimai` was installed correctly:
@@ -70,8 +70,8 @@ package main
 
 import (
 	"github.com/eure/kamimai"
-	"github.com/eure/kamimai/core"
-	_ "github.com/eure/kamimai/driver"
+	"github.com/mr04vv/kamimai/core"
+	_ "github.com/mr04vv/kamimai/driver"
 )
 
 func main() {
@@ -102,4 +102,4 @@ func main() {
 
 ## License
 
-[The MIT License (MIT)](https://github.com/eure/kamimai/blob/master/LICENSE)
+[The MIT License (MIT)](https://github.com/mr04vv/kamimai/blob/master/LICENSE)

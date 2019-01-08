@@ -3,9 +3,9 @@ package kamimai
 import (
 	"testing"
 
-	"github.com/eure/kamimai/core"
-	_ "github.com/eure/kamimai/driver"
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/mr04vv/kamimai/core"
+	_ "github.com/mr04vv/kamimai/driver"
 	"github.com/stretchr/testify/assert"
 )
 

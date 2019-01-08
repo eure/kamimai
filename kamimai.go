@@ -3,7 +3,7 @@ package kamimai
 import (
 	"database/sql"
 
-	"github.com/eure/kamimai/core"
+	"github.com/mr04vv/kamimai/core"
 )
 
 // Version represents kamimai's semantic version.

@@ -10,9 +10,9 @@ import (
 
 	"github.com/pkg/errors"
 
-	"github.com/eure/kamimai/internal/cast"
-	"github.com/eure/kamimai/internal/direction"
-	"github.com/eure/kamimai/internal/version"
+	"github.com/mr04vv/kamimai/internal/cast"
+	"github.com/mr04vv/kamimai/internal/direction"
+	"github.com/mr04vv/kamimai/internal/version"
 )
 
 const (

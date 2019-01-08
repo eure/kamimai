@@ -8,7 +8,7 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/eure/kamimai/core"
+	"github.com/mr04vv/kamimai/core"
 )
 
 type (

@@ -21,6 +21,44 @@ Make sure that `kamimai` was installed correctly:
 kamimai -h
 ```
 
+## Config
+
+### Example:
+
+#### data source tree
+
+migrations/
+├── config.tml
+├── base
+│   ├── 20190101000000_base_up.sql
+│   └── 20190101000000_base_down.sql
+├── base-data
+│   ├── 20190101000000_base_data_up.sql
+│   └── 20190101000000_base_data_down.sql
+└── user
+    ├── 20190101000000_user_up.sql
+    └── 20190101000000_user_down.sql
+
+#### config.tml
+
+```toml
+[base]
+driver = "mysql"
+dsn = "mysql://$MYSQL_USER:$MYSQL_PASSWORD@($MYSQL_HOST:$MYSQL_PORT)/$MYSQL_BASE_DBNAME?charset=utf8"
+directory = "base"
+
+[user]
+driver = "mysql"
+dsn = "mysql://$MYSQL_USER:$MYSQL_PASSWORD@($MYSQL_HOST:$MYSQL_PORT)/$MYSQL_USER_DBNAME?charset=utf8"
+directory = "user"
+
+[base-data]
+driver = "mysql"
+dsn = "mysql://$MYSQL_USER:$MYSQL_PASSWORD@($MYSQL_HOST:$MYSQL_PORT)/$MYSQL_BASE_DBNAME?charset=utf8"
+directory = "base-data"
+version_table = "data_version" # optional (default is "schema_version")
+```
+
 ## Usage:
 
 ### Create

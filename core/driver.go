@@ -11,7 +11,7 @@ type (
 		// Open is the first function to be called.
 		// Check the dsn string and open and verify any connection
 		// that has to be made.
-		Open(string) error
+		Open(string, string) error
 
 		// Close is the last function to be called.
 		// Close any open connection here.

@@ -19,9 +19,10 @@ type (
 	}
 
 	internal struct {
-		Driver    string `yaml:"driver"`
-		Dsn       string `yaml:"dsn"`
-		Directory string `yaml:"directory"`
+		Driver       string `yaml:"driver"`
+		Dsn          string `yaml:"dsn"`
+		Directory    string `yaml:"directory"`
+		VersionTable string `yaml:"version_table"`
 	}
 )
 
@@ -107,6 +108,15 @@ func (c Config) Dsn() string {
 		return os.ExpandEnv(d.Dsn)
 	}
 	return ""
+}
+
+// VersionTable returns a raw version_table string.
+func (c Config) VersionTable() string {
+	if d, ok := c.data[c.env]; ok {
+		return os.ExpandEnv(d.VersionTable)
+	}
+	const defaultVersionTableName = "schema_version"
+	return defaultVersionTableName
 }
 
 func (c Config) migrationsDir() string {

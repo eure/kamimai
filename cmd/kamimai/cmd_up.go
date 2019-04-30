@@ -20,7 +20,7 @@ func doUpCmd(cmd *Cmd, args ...string) error {
 
 	// driver
 	driver := core.GetDriver(config.Driver())
-	if err := driver.Open(config.Dsn()); err != nil {
+	if err := driver.Open(config.Dsn(), config.VersionTable()); err != nil {
 		return err
 	}
 

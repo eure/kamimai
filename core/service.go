@@ -129,6 +129,7 @@ func (s *Service) do(idx int) error {
 
 	mig := migs[idx]
 	if err := drv.Migrate(mig); err != nil {
+		log.Println("failed", mig.Name())
 		return err
 	}
 

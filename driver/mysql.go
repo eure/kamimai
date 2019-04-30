@@ -23,7 +23,7 @@ type (
 // Open is the first function to be called.
 // Check the dsn string and open and verify any connection
 // that has to be made.
-func (d *MySQL) Open(dsn string) error {
+func (d *MySQL) Open(dsn, versionTable string) error {
 	z := strings.SplitN(dsn, "mysql://", 2)
 	if len(z) != 2 {
 		return errors.New("invalid data source name of mysql")
@@ -38,6 +38,9 @@ func (d *MySQL) Open(dsn string) error {
 	}
 	d.db = db
 
+	if versionTable != "" {
+		versionTableName = versionTable
+	}
 	return d.Version().Create()
 }
 

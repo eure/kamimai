@@ -14,7 +14,7 @@ func Current(c *core.Config) (uint64, error) {
 
 	// driver
 	driver := core.GetDriver(c.Driver())
-	if err := driver.Open(c.Dsn()); err != nil {
+	if err := driver.Open(c.Dsn(), c.VersionTable()); err != nil {
 		return 0, err
 	}
 
@@ -27,7 +27,7 @@ func Sync(c *core.Config) error {
 
 	// driver
 	driver := core.GetDriver(c.Driver())
-	if err := driver.Open(c.Dsn()); err != nil {
+	if err := driver.Open(c.Dsn(), c.VersionTable()); err != nil {
 		return err
 	}
 
@@ -53,7 +53,7 @@ func Up(c *core.Config) error {
 
 	// driver
 	driver := core.GetDriver(c.Driver())
-	if err := driver.Open(c.Dsn()); err != nil {
+	if err := driver.Open(c.Dsn(), c.VersionTable()); err != nil {
 		return err
 	}
 
@@ -79,7 +79,7 @@ func Down(c *core.Config) error {
 
 	// driver
 	driver := core.GetDriver(c.Driver())
-	if err := driver.Open(c.Dsn()); err != nil {
+	if err := driver.Open(c.Dsn(), c.VersionTable()); err != nil {
 		return err
 	}
 

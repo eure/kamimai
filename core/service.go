@@ -272,22 +272,18 @@ func (s *Service) NextMigration(name string) (up *Migration, down *Migration, er
 	up, down = &Migration{version: 1, name: ""}, &Migration{version: 1, name: ""}
 	verFormat := "%03d"
 
-	// gets the oldest migration version file.
-	if obj := s.data.last(); obj != nil {
-		// for version number
-		v := obj.version + 1
-		up.version, down.version = v, v
-	}
-	if obj := s.data.first(); obj != nil {
-		// for version format
-		_, file := filepath.Split(obj.name)
-		verFormat = version.Format(file)
-
-		if _, err := time.Parse("20060102150405", version.Get(file)); err == nil {
+	// gets the latest migration version file.
+	if latest := s.data.last(); latest != nil {
+		// check if the format of the latest version is timestamp
+		if version.IsTimestamp(latest.version) {
+			// for version format
 			v := cast.Uint64(time.Now())
 			up.version, down.version = v, v
+		} else {
+			// for version number
+			v := latest.version + 1
+			up.version, down.version = v, v
 		}
-
 	}
 
 	// [ver]_[name]_[direction-suffix][.ext]

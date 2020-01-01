@@ -63,3 +63,24 @@ func BenchmarkFormat(b *testing.B) {
 		_ = Format("000_foo")
 	}
 }
+
+func TestIsTimestamp(t *testing.T) {
+	asrt := assert.New(t)
+
+	candidates := []struct {
+		value    uint64
+		expected bool
+		message  string
+	}{
+		{value: 0, expected: false, message: ""},
+		{value: 1, expected: false, message: ""},
+		{value: 99999, expected: false, message: ""},
+		{value: 19700101000000, expected: false, message: ""},
+		{value: 19700101000001, expected: true, message: ""},
+		{value: 20200101150405, expected: true, message: ""},
+	}
+
+	for _, c := range candidates {
+		asrt.EqualValues(c.expected, IsTimestamp(c.value), c.message)
+	}
+}

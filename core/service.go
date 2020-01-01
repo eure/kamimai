@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"sort"
+	"strconv"
 	"time"
 
 	"github.com/pkg/errors"
@@ -272,22 +273,17 @@ func (s *Service) NextMigration(name string) (up *Migration, down *Migration, er
 	up, down = &Migration{version: 1, name: ""}, &Migration{version: 1, name: ""}
 	verFormat := "%03d"
 
-	// gets the oldest migration version file.
-	if obj := s.data.last(); obj != nil {
-		// for version number
-		v := obj.version + 1
-		up.version, down.version = v, v
-	}
-	if obj := s.data.first(); obj != nil {
+	// check if the format of the latest version is timestamp
+	isDateFormat := IsTimeStamp(s.version)
+
+	if isDateFormat {
 		// for version format
-		_, file := filepath.Split(obj.name)
-		verFormat = version.Format(file)
-
-		if _, err := time.Parse("20060102150405", version.Get(file)); err == nil {
-			v := cast.Uint64(time.Now())
-			up.version, down.version = v, v
-		}
-
+		v := cast.Uint64(time.Now())
+		up.version, down.version = v, v
+	} else {
+		// for version number
+		v := s.version + 1
+		up.version, down.version = v, v
 	}
 
 	// [ver]_[name]_[direction-suffix][.ext]
@@ -302,5 +298,15 @@ func (s *Service) NextMigration(name string) (up *Migration, down *Migration, er
 	n = fmt.Sprintf(base, down.version, direction.Suffix(direction.Down), ext)
 	down.name = filepath.Join(s.config.migrationsDir(), n)
 
+	return
+}
+
+// IsTimeStamp return if prefix is timestamp or not
+func IsTimeStamp(prefix uint64) (result bool) {
+	date := strconv.FormatUint(prefix, 10)
+	layout := "20060102150405"
+	t, _ := time.Parse(layout, date)
+	std, _ := time.Parse(layout, layout)
+	result = t.After(std)
 	return
 }

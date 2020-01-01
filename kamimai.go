@@ -7,7 +7,7 @@ import (
 )
 
 // Version represents kamimai's semantic version.
-const Version = "v0.2.1"
+const Version = "v0.4.0"
 
 // Current returns the current migration version.
 func Current(c *core.Config) (uint64, error) {

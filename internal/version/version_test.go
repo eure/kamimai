@@ -51,6 +51,9 @@ func TestFormat(t *testing.T) {
 		{value: "", expected: "", message: ""},
 		{value: "foo", expected: "", message: ""},
 		{value: "foo_bar", expected: "", message: ""},
+		{value: "20200101150405_foo", expected: "%d", message: ""},
+		{value: "001_20200101150405_foo", expected: "%03d", message: ""},
+		{value: "999_20200101150405_foo", expected: "%d", message: ""},
 	}
 
 	for _, c := range candidates {

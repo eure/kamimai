@@ -44,8 +44,18 @@ func (s Service) walker(indexPath map[uint64]*Migration) func(string, os.FileInf
 		}
 
 		name := info.Name()
-		if s.direction != direction.Get(name) {
-			return nil
+		d := direction.Get(name)
+
+		if s.direction == direction.Unknown {
+			// Collect filename of up in case of unknown direction.
+			if d != direction.Up {
+				return nil
+			}
+		} else {
+			// Collect filename of the same direction.
+			if s.direction != d {
+				return nil
+			}
 		}
 
 		fullname := filepath.Clean(filepath.Join(wd, path))
@@ -284,6 +294,8 @@ func (s *Service) NextMigration(name string) (up *Migration, down *Migration, er
 			v := latest.version + 1
 			up.version, down.version = v, v
 		}
+		_, file := filepath.Split(latest.name)
+		verFormat = version.Format(file)
 	}
 
 	// [ver]_[name]_[direction-suffix][.ext]

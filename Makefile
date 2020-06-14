@@ -50,7 +50,7 @@ cyclo: gocyclo
 		echo "$$cyclo"; if [ "$$cyclo" != "" ]; then exit 1; fi
 
 test:
-	@go test $(TARGET_ONLY_PKGS)
+	@MYSQL_USRE=kamimai MYSQL_PASSWORD=kamimai MYSQL_DATABASE=kamimai MYSQL_HOST=127.0.0.1 MYSQL_PORT=3306 go test $(TARGET_ONLY_PKGS)
 
 .PHONY: verify-github-token
 verify-github-token:

@@ -28,6 +28,7 @@ func TestSync(t *testing.T) {
 		// Down
 		assert.NoError(Down(conf))
 		ver, err := Current(conf)
+		t.Log(ver)
 		if assert.NoError(err) {
 			assert.EqualValues(0, ver)
 		}

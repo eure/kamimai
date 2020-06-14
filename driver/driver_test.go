@@ -43,6 +43,7 @@ func testVersion(t *testing.T, version core.Version) {
 	if asrt.NoError(version.Drop()) {
 		// current
 		val, err = version.Current()
+
 		if asrt.Error(err) {
 			asrt.EqualValues(0, val)
 		}

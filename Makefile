@@ -1,7 +1,6 @@
 GOVERSION=$(shell go version)
 GOOS=$(word 1,$(subst /, ,$(lastword $(GOVERSION))))
 GOARCH=$(word 2,$(subst /, ,$(lastword $(GOVERSION))))
-TARGET_ONLY_PKGS=$(shell go list ./... 2> /dev/null | grep -v "/vendor/")
 IGNORE_DEPS_GOLINT='vendor/.+\.go'
 IGNORE_DEPS_GOCYCLO='vendor/.+\.go'
 HAVE_GOLINT:=$(shell which golint)
@@ -50,7 +49,7 @@ cyclo: gocyclo
 		echo "$$cyclo"; if [ "$$cyclo" != "" ]; then exit 1; fi
 
 test:
-	@MYSQL_USRE=kamimai MYSQL_PASSWORD=kamimai MYSQL_DATABASE=kamimai MYSQL_HOST=127.0.0.1 MYSQL_PORT=3306 go test $(TARGET_ONLY_PKGS)
+	@MYSQL_USER=kamimai MYSQL_PASSWORD=kamimai MYSQL_DATABASE=kamimai MYSQL_HOST=127.0.0.1 MYSQL_PORT=3306 go test ./...
 
 .PHONY: verify-github-token
 verify-github-token:

@@ -98,6 +98,20 @@ func main() {
 - PostgreSQL
 - _and more_
 
+## Contribution
+
+### Setup
+
+```sh
+docker build -t $ImageName .
+docker run --name $ContainerName -d -it --rm -p 3306:3306 $ImageName
+
+# kamimai の実行
+MYSQL_HOST=127.0.0.1 MYSQL_USER=kamimai MYSQL_PASSWORD=kamimai go run ./cmd/kamimai --dry-run --env=development --path=./examples/mysql create test
+kamimai: created examples/mysql/migrations/002_test_up.sql
+kamimai: created examples/mysql/migrations/002_test_down.sql
+```
+
 ## License
 
 [The MIT License (MIT)](https://github.com/eure/kamimai/blob/master/LICENSE)

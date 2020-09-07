@@ -1,0 +1,14 @@
+version: '2'
+services:
+  mysql:
+    image: mysql:8.0.20
+    environment:
+      MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
+      MYSQL_USER: kamimai
+      MYSQL_PASSWORD: kamimai
+      MYSQL_DATABASE: kamimai
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_HOST: 127.0.0.1
+      MYSQL_PORT: 3306
+    ports:
+      - "3306:3306"

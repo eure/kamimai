@@ -103,8 +103,7 @@ func main() {
 ### Setup
 
 ```sh
-docker build -t $ImageName .
-docker run --name $ContainerName -d -it --rm -p 3306:3306 $ImageName
+docker-compose up -d
 
 # kamimai の実行
 MYSQL_HOST=127.0.0.1 MYSQL_USER=kamimai MYSQL_PASSWORD=kamimai go run ./cmd/kamimai --dry-run --env=development --path=./examples/mysql create test

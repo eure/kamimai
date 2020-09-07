@@ -1,8 +1,9 @@
-FROM mysql:8.0.20
+FROM golang:1.14.0-buster as builder
+WORKDIR /go
+COPY ./ .
+RUN export GOPATH= && go mod download && go build -o /go/ -v -ldflags '-s -w' ./cmd/kamimai
 
-ENV MYSQL_USER kamimai
-ENV MYSQL_PASSWORD kamimai
-ENV MYSQL_DATABASE kamimai
-ENV MYSQL_ROOT_PASSWORD root
-ENV MYSQL_HOST 127.0.0.1
-ENV MYSQL_PORT 3306
+FROM gcr.io/distroless/base
+COPY --from=builder go/kamimai .
+ENTRYPOINT ["/kamimai"]
+CMD ["--help"]

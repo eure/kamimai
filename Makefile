@@ -26,6 +26,9 @@ build: gox
 	@mkdir -p $(ARTIFACTS_DIR)/$(VERSION) && cd $(ARTIFACTS_DIR)/$(VERSION); \
 		gox $(LDFLAGS) $(TARGETS)
 
+build-docker-image:
+	docker build -t kamimai:$(VERSION) --no-cache --rm --compress .
+	
 release: ghr verify-github-token build
 	@ghr -c $(COMMITISH) -u $(PROJECT_USERNAME) -r $(PROJECT_REPONAME) -t $$GITHUB_TOKEN \
 		--replace $(VERSION) $(ARTIFACTS_DIR)/$(VERSION)

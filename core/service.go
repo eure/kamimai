@@ -256,10 +256,18 @@ func (s *Service) Sync() error {
 	if err := s.apply(); err != nil {
 		return err
 	}
+	if len(s.data) == 0 {
+		return nil
+	}
 
 	version := s.driver.Version()
-
+	// 一番目のマイグレーションファイルが Timestamp 形式だったらそれ以降は Timestamp 扱いにする
+	isTimeStampVer := s.data[0].IsValidTimestamp()
 	for _, mig := range s.data {
+		if isTimeStampVer != mig.IsValidTimestamp() {
+			return errors.New("invalid version format")
+		}
+
 		if count := version.Count(mig.version); count == 0 {
 			// gets current index of migrations
 			idx := s.data.index(*mig)

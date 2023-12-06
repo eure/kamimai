@@ -1,7 +1,8 @@
-version: '2'
+version: "2"
 services:
   mysql:
     image: mysql:8.0.20
+    platform: linux/x86_64
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
       MYSQL_USER: kamimai

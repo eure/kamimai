@@ -25,43 +25,43 @@ kamimai -h
 
 ```shell
 # create new migration files
-kamimai -path=./example/mysql -env=test1 create migrate_name
+kamimai -path=./examples/mysql -env=test1 create migrate_name
 ```
 
 ### Up
 
 ```shell
 # apply all available migrations
-kamimai -path=./example/mysql -env=test1 up
+kamimai -path=./examples/mysql -env=test1 up
 
 # apply the next n migrations
-kamimai -path=./example/mysql -env=test1 up n
+kamimai -path=./examples/mysql -env=test1 up n
 
 # apply the given version migration
-kamimai -path=./example/mysql -env=test1 up -version=20060102150405
+kamimai -path=./examples/mysql -env=test1 up -version=20060102150405
 ```
 
 ### Down
 
 ```shell
 # rollback the previous migration
-kamimai -path=./example/mysql -env=test1 down
+kamimai -path=./examples/mysql -env=test1 down
 
 # rollback the previous n migrations
 kamimai -path=./example/mysql -env=test1 down n
 
 # rollback the given version migration
-kamimai -path=./example/mysql -env=test1 down -version=20060102150405
+kamimai -path=./examples/mysql -env=test1 down -version=20060102150405
 ```
 
 ### Sync
 
 ```shell
 # sync all migrations
-kamimai -path=./example/mysql -env=test1 sync
+kamimai -path=./examples/mysql -env=test1 sync
 ```
 
-## Usage in Go code 
+## Usage in Go code
 
 ```go
 package main
@@ -77,9 +77,9 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	
+
 	conf.WithEnv("development")
-	
+
 	// Sync
 	kamimai.Sync(conf)
 
@@ -106,7 +106,7 @@ func main() {
 docker-compose up -d
 
 # kamimai の実行
-MYSQL_HOST=127.0.0.1 MYSQL_USER=kamimai MYSQL_PASSWORD=kamimai go run ./cmd/kamimai --dry-run --env=development --path=./examples/mysql create test
+MYSQL_HOST=127.0.0.1 MYSQL_USER=kamimai MYSQL_PASSWORD=kamimai go run ./cmd/kamimai --dry-run --env=development --path=./examples/mysql create test1
 kamimai: created examples/mysql/migrations/002_test_up.sql
 kamimai: created examples/mysql/migrations/002_test_down.sql
 ```

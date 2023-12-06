@@ -3,6 +3,8 @@ package core
 import (
 	"io/ioutil"
 	"os"
+	"strconv"
+	"time"
 
 	"github.com/eure/kamimai/internal/cast"
 )
@@ -63,6 +65,11 @@ func (m *Migration) IsValid() bool {
 		return false
 	}
 	return m.version > 0 && m.name != ""
+}
+
+func (m *Migration) IsValidTimestamp() bool {
+	_, err := time.Parse("20060102150405", strconv.FormatUint(m.version, 10))
+	return err == nil
 }
 
 //////////////////////////////
